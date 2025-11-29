@@ -19,11 +19,11 @@ class SeatItemIntan extends StatelessWidget {
     Color seatColorIntan;
 
     if (isSoldIntan) {
-      seatColorIntan = Colors.red;      // Kursi terjual
+      seatColorIntan = Colors.red;      
     } else if (isSelectedIntan) {
-      seatColorIntan = Colors.blue;     // Kursi dipilih
+      seatColorIntan = Colors.blue;     
     } else {
-      seatColorIntan = Colors.grey;     // Kursi kosong
+      seatColorIntan = Colors.grey;     
     }
 
     return GestureDetector(

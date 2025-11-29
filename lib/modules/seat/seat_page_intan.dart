@@ -18,7 +18,6 @@ class SeatPageIntan extends StatefulWidget {
 class _SeatPageIntanState extends State<SeatPageIntan> {
   List<String> selectedSeatsIntan = [];
 
-  // contoh kursi terjual (seharusnya dari firebase)
   final List<String> soldSeatsIntan = ["A3", "C5"];
 
   @override
@@ -32,14 +31,14 @@ class _SeatPageIntanState extends State<SeatPageIntan> {
       body: Padding(
         padding: const EdgeInsets.all(12),
         child: GridView.builder(
-          itemCount: 6 * 8, // 6 baris × 8 kolom
+          itemCount: 6 * 8, 
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 8,
             childAspectRatio: 1,
           ),
           itemBuilder: (context, index) {
-            int rowIndexIntan = index ~/ 8; // 0–5
-            int colIndexIntan = (index % 8) + 1; // 1–8
+            int rowIndexIntan = index ~/ 8; 
+            int colIndexIntan = (index % 8) + 1; 
 
             String seatNameIntan =
                 "${rowLettersIntan[rowIndexIntan]}$colIndexIntan";
@@ -66,7 +65,6 @@ class _SeatPageIntanState extends State<SeatPageIntan> {
         ),
       ),
 
-      // tombol floating
       floatingActionButton: FloatingActionButton.extended(
         label: const Text("Book Now"),
         onPressed: () {
