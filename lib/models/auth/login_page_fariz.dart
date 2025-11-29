@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'register_page_fariz.dart';
 import '../home/home_page_adel.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginPageBioskop extends StatefulWidget {
   const LoginPageBioskop({super.key});
@@ -124,13 +125,45 @@ class _LoginPageBioskopState extends State<LoginPageBioskop> {
                           borderRadius: BorderRadius.circular(14),
                         ),
                       ),
-                      onPressed: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => const HomePageAdel(),
-                          ),
-                        );
+                      onPressed: () async {
+                        String email = emailController.text.trim();
+                        String pass = passController.text.trim();
+                        if (email.isEmpty || pass.isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text("Please fill in all fields."),
+                            ),
+                          );
+                          return;
+                        }
+
+                        try {
+                          await FirebaseAuth.instance
+                              .signInWithEmailAndPassword(
+                                email: email,
+                                password: pass,
+                              );
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const HomePageAdel(),
+                            ),
+                          );
+                        } on FirebaseAuthException catch (e) {
+                          String message = "Login gagal";
+
+                          if (e.code == 'user-not-found') {
+                            message = "No user found for that email.";
+                          } else if (e.code == 'wrong-password') {
+                            message = "Wrong password provided.";
+                          }
+
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(message),
+                            ),
+                          );
+                        }
                       },
                       child: const Text(
                         "Login",

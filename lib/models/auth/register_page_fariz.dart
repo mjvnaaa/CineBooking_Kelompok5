@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class RegisterPageBioskop extends StatefulWidget {
   const RegisterPageBioskop({super.key});
@@ -13,6 +15,58 @@ class _RegisterPageBioskopState extends State<RegisterPageBioskop> {
   final passController = TextEditingController();
 
   bool obscure = true;
+
+  Future<void> registerUser() async {
+    String username = nameController.text.trim();
+    String email = emailController.text.trim();
+    String password = passController.text.trim();
+
+    if (username.isEmpty || email.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("Please fill all fields")));
+      return;
+    }
+
+    try {
+      // Firebase Auth register
+      UserCredential userCredential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: email, password: password);
+
+      String uid = userCredential.user!.uid;
+
+      // Simpan user ke Firestore sesuai UserModelJevon
+      await FirebaseFirestore.instance.collection('users').doc(uid).set({
+        'uid': uid,
+        'email': email,
+        'username': username,
+        'balance': 0, // default balance
+        'createdAt': Timestamp.now(),
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Account created successfully")),
+      );
+
+      Navigator.pop(context);
+    } on FirebaseAuthException catch (e) {
+      String message = "Registration failed";
+
+      if (e.code == 'email-already-in-use') {
+        message = "Email is already in use";
+      } else if (e.code == 'weak-password') {
+        message = "Password is too weak";
+      }
+
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(message)));
+    } catch (e) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("An error occurred")));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,15 +90,12 @@ class _RegisterPageBioskopState extends State<RegisterPageBioskop> {
               gradient: LinearGradient(
                 begin: Alignment.bottomCenter,
                 end: Alignment.topCenter,
-                colors: [
-                  Colors.black.withOpacity(0.8),
-                  Colors.transparent,
-                ],
+                colors: [Colors.black.withOpacity(0.8), Colors.transparent],
               ),
             ),
           ),
 
-          // Konten register
+          // Form Register
           Center(
             child: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 32),
@@ -57,7 +108,6 @@ class _RegisterPageBioskopState extends State<RegisterPageBioskop> {
                       fontSize: 36,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
-                      letterSpacing: 1.5,
                     ),
                   ),
                   const SizedBox(height: 10),
@@ -65,10 +115,9 @@ class _RegisterPageBioskopState extends State<RegisterPageBioskop> {
                     "Join CineBooking now!",
                     style: TextStyle(color: Colors.white70),
                   ),
-
                   const SizedBox(height: 40),
 
-                  // Input Name
+                  // Username
                   TextField(
                     controller: nameController,
                     style: const TextStyle(color: Colors.white),
@@ -77,8 +126,10 @@ class _RegisterPageBioskopState extends State<RegisterPageBioskop> {
                       fillColor: Colors.white.withOpacity(0.15),
                       hintText: "Full Name",
                       hintStyle: const TextStyle(color: Colors.white70),
-                      prefixIcon:
-                          const Icon(Icons.person, color: Colors.white70),
+                      prefixIcon: const Icon(
+                        Icons.person,
+                        color: Colors.white70,
+                      ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(14),
                         borderSide: BorderSide.none,
@@ -88,7 +139,7 @@ class _RegisterPageBioskopState extends State<RegisterPageBioskop> {
 
                   const SizedBox(height: 18),
 
-                  // Input Email
+                  // Email
                   TextField(
                     controller: emailController,
                     style: const TextStyle(color: Colors.white),
@@ -97,7 +148,10 @@ class _RegisterPageBioskopState extends State<RegisterPageBioskop> {
                       fillColor: Colors.white.withOpacity(0.15),
                       hintText: "Email",
                       hintStyle: const TextStyle(color: Colors.white70),
-                      prefixIcon: const Icon(Icons.email, color: Colors.white70),
+                      prefixIcon: const Icon(
+                        Icons.email,
+                        color: Colors.white70,
+                      ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(14),
                         borderSide: BorderSide.none,
@@ -107,7 +161,7 @@ class _RegisterPageBioskopState extends State<RegisterPageBioskop> {
 
                   const SizedBox(height: 18),
 
-                  // Input Password
+                  // Password
                   TextField(
                     controller: passController,
                     obscureText: obscure,
@@ -119,7 +173,11 @@ class _RegisterPageBioskopState extends State<RegisterPageBioskop> {
                       hintStyle: const TextStyle(color: Colors.white70),
                       prefixIcon: const Icon(Icons.lock, color: Colors.white70),
                       suffixIcon: IconButton(
-                        onPressed: () => setState(() => obscure = !obscure),
+                        onPressed: () {
+                          setState(() {
+                            obscure = !obscure;
+                          });
+                        },
                         icon: Icon(
                           obscure ? Icons.visibility : Icons.visibility_off,
                           color: Colors.white70,
@@ -134,7 +192,7 @@ class _RegisterPageBioskopState extends State<RegisterPageBioskop> {
 
                   const SizedBox(height: 30),
 
-                  // Tombol Register
+                  // Register Button
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
@@ -145,10 +203,7 @@ class _RegisterPageBioskopState extends State<RegisterPageBioskop> {
                           borderRadius: BorderRadius.circular(14),
                         ),
                       ),
-                      onPressed: () {
-                        // TODO: logic register di sini
-                        Navigator.pop(context); // kembali ke login
-                      },
+                      onPressed: registerUser,
                       child: const Text(
                         "Register",
                         style: TextStyle(
