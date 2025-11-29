@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import 'register_page_fariz.dart';
-import '../home/home_page_adel.dart';
 
-class LoginPageBioskop extends StatefulWidget {
-  const LoginPageBioskop({super.key});
+class RegisterPageBioskop extends StatefulWidget {
+  const RegisterPageBioskop({super.key});
 
   @override
-  State<LoginPageBioskop> createState() => _LoginPageBioskopState();
+  State<RegisterPageBioskop> createState() => _RegisterPageBioskopState();
 }
 
-class _LoginPageBioskopState extends State<LoginPageBioskop> {
+class _RegisterPageBioskopState extends State<RegisterPageBioskop> {
+  final nameController = TextEditingController();
   final emailController = TextEditingController();
   final passController = TextEditingController();
+
   bool obscure = true;
 
   @override
@@ -36,12 +36,15 @@ class _LoginPageBioskopState extends State<LoginPageBioskop> {
               gradient: LinearGradient(
                 begin: Alignment.bottomCenter,
                 end: Alignment.topCenter,
-                colors: [Colors.black.withOpacity(0.8), Colors.transparent],
+                colors: [
+                  Colors.black.withOpacity(0.8),
+                  Colors.transparent,
+                ],
               ),
             ),
           ),
 
-          // Konten login
+          // Konten register
           Center(
             child: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 32),
@@ -49,21 +52,41 @@ class _LoginPageBioskopState extends State<LoginPageBioskop> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const Text(
-                    "CineBooking",
+                    "Create Account",
                     style: TextStyle(
-                      fontSize: 42,
+                      fontSize: 36,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
-                      letterSpacing: 2,
+                      letterSpacing: 1.5,
                     ),
                   ),
-                  const SizedBox(height: 6),
+                  const SizedBox(height: 10),
                   const Text(
-                    "Book your favorite movie now!",
+                    "Join CineBooking now!",
                     style: TextStyle(color: Colors.white70),
                   ),
 
                   const SizedBox(height: 40),
+
+                  // Input Name
+                  TextField(
+                    controller: nameController,
+                    style: const TextStyle(color: Colors.white),
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Colors.white.withOpacity(0.15),
+                      hintText: "Full Name",
+                      hintStyle: const TextStyle(color: Colors.white70),
+                      prefixIcon:
+                          const Icon(Icons.person, color: Colors.white70),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(14),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 18),
 
                   // Input Email
                   TextField(
@@ -74,16 +97,14 @@ class _LoginPageBioskopState extends State<LoginPageBioskop> {
                       fillColor: Colors.white.withOpacity(0.15),
                       hintText: "Email",
                       hintStyle: const TextStyle(color: Colors.white70),
-                      prefixIcon: const Icon(
-                        Icons.email,
-                        color: Colors.white70,
-                      ),
+                      prefixIcon: const Icon(Icons.email, color: Colors.white70),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(14),
                         borderSide: BorderSide.none,
                       ),
                     ),
                   ),
+
                   const SizedBox(height: 18),
 
                   // Input Password
@@ -113,7 +134,7 @@ class _LoginPageBioskopState extends State<LoginPageBioskop> {
 
                   const SizedBox(height: 30),
 
-                  // Tombol Login
+                  // Tombol Register
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
@@ -125,15 +146,11 @@ class _LoginPageBioskopState extends State<LoginPageBioskop> {
                         ),
                       ),
                       onPressed: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => const HomePageAdel(),
-                          ),
-                        );
+                        // TODO: logic register di sini
+                        Navigator.pop(context); // kembali ke login
                       },
                       child: const Text(
-                        "Login",
+                        "Register",
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -145,27 +162,10 @@ class _LoginPageBioskopState extends State<LoginPageBioskop> {
 
                   const SizedBox(height: 15),
 
-                  Text(
-                    "Forgot password?",
-                    style: TextStyle(
-                      color: Colors.white.withOpacity(0.8),
-                      decoration: TextDecoration.underline,
-                    ),
-                  ),
-
-                  const SizedBox(height: 15),
-
                   GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => const RegisterPageBioskop(),
-                        ),
-                      );
-                    },
+                    onTap: () => Navigator.pop(context),
                     child: Text(
-                      "Don't have an account? Register",
+                      "Already have an account? Login",
                       style: TextStyle(
                         color: Colors.white.withOpacity(0.85),
                         decoration: TextDecoration.underline,
