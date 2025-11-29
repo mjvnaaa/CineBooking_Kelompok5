@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'models/home/home_page_adel.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  //await Firebase.initializeApp(); 
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
@@ -13,10 +14,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'CineBooking Jevon',
-      home: const Scaffold(
-        body: Center(child: Text("Backend Ready - Jevon")),
+      title: 'CineBooking Tim 5',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
+      home: const HomePageAdel(),
     );
   }
 }
