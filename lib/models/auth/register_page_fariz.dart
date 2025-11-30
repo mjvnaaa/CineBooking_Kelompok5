@@ -29,18 +29,16 @@ class _RegisterPageBioskopState extends State<RegisterPageBioskop> {
     }
 
     try {
-      // Firebase Auth register
       UserCredential userCredential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
 
       String uid = userCredential.user!.uid;
 
-      // Simpan user ke Firestore sesuai UserModelJevon
       await FirebaseFirestore.instance.collection('users').doc(uid).set({
         'uid': uid,
         'email': email,
         'username': username,
-        'balance': 0, // default balance
+        'balance': 0,
         'createdAt': Timestamp.now(),
       });
 
@@ -58,13 +56,9 @@ class _RegisterPageBioskopState extends State<RegisterPageBioskop> {
         message = "Password is too weak";
       }
 
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(message)));
+      ScaffoldMessenger.of(context,).showSnackBar(SnackBar(content: Text(message)));
     } catch (e) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text("An error occurred")));
+      ScaffoldMessenger.of(context,).showSnackBar(const SnackBar(content: Text("An error occurred")));
     }
   }
 
@@ -73,7 +67,6 @@ class _RegisterPageBioskopState extends State<RegisterPageBioskop> {
     return Scaffold(
       body: Stack(
         children: [
-          // Background
           Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
@@ -84,7 +77,6 @@ class _RegisterPageBioskopState extends State<RegisterPageBioskop> {
             ),
           ),
 
-          // Overlay gradasi
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -95,7 +87,6 @@ class _RegisterPageBioskopState extends State<RegisterPageBioskop> {
             ),
           ),
 
-          // Form Register
           Center(
             child: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 32),
@@ -115,9 +106,9 @@ class _RegisterPageBioskopState extends State<RegisterPageBioskop> {
                     "Join CineBooking now!",
                     style: TextStyle(color: Colors.white70),
                   ),
+
                   const SizedBox(height: 40),
 
-                  // Username
                   TextField(
                     controller: nameController,
                     style: const TextStyle(color: Colors.white),
@@ -139,7 +130,6 @@ class _RegisterPageBioskopState extends State<RegisterPageBioskop> {
 
                   const SizedBox(height: 18),
 
-                  // Email
                   TextField(
                     controller: emailController,
                     style: const TextStyle(color: Colors.white),
@@ -161,7 +151,6 @@ class _RegisterPageBioskopState extends State<RegisterPageBioskop> {
 
                   const SizedBox(height: 18),
 
-                  // Password
                   TextField(
                     controller: passController,
                     obscureText: obscure,
@@ -192,7 +181,6 @@ class _RegisterPageBioskopState extends State<RegisterPageBioskop> {
 
                   const SizedBox(height: 30),
 
-                  // Register Button
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(

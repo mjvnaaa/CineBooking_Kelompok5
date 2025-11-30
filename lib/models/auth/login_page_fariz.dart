@@ -20,7 +20,6 @@ class _LoginPageBioskopState extends State<LoginPageBioskop> {
     return Scaffold(
       body: Stack(
         children: [
-          // Background
           Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
@@ -31,7 +30,6 @@ class _LoginPageBioskopState extends State<LoginPageBioskop> {
             ),
           ),
 
-          // Overlay gradasi
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -42,7 +40,6 @@ class _LoginPageBioskopState extends State<LoginPageBioskop> {
             ),
           ),
 
-          // Konten login
           Center(
             child: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 32),
@@ -66,7 +63,6 @@ class _LoginPageBioskopState extends State<LoginPageBioskop> {
 
                   const SizedBox(height: 40),
 
-                  // Input Email
                   TextField(
                     controller: emailController,
                     style: const TextStyle(color: Colors.white),
@@ -87,7 +83,6 @@ class _LoginPageBioskopState extends State<LoginPageBioskop> {
                   ),
                   const SizedBox(height: 18),
 
-                  // Input Password
                   TextField(
                     controller: passController,
                     obscureText: obscure,
@@ -114,7 +109,6 @@ class _LoginPageBioskopState extends State<LoginPageBioskop> {
 
                   const SizedBox(height: 30),
 
-                  // Tombol Login
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
