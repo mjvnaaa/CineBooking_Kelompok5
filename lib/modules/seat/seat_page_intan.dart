@@ -1,3 +1,4 @@
+import 'package:cinebooking_kelompok5/controllers/seat_controller.dart';
 import 'package:flutter/material.dart';
 import 'seat_item_intan.dart';
 
@@ -17,8 +18,18 @@ class SeatPageIntan extends StatefulWidget {
 
 class _SeatPageIntanState extends State<SeatPageIntan> {
   List<String> selectedSeatsIntan = [];
-
   final List<String> soldSeatsIntan = ["A3", "C5"];
+
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      context.read<SeatControllerSalam>().initData(
+        basePriceInput: widget.basePriceIntan,
+        movieTitleInput: widget.movieTitleIntan,
+      );
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
