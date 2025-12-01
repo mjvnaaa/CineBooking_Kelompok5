@@ -1,12 +1,18 @@
+import 'dart:async';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SeatControllerSalam with ChangeNotifier {
   final List<String> _selectedSeats = [];
   List<String> get selectedSeats => _selectedSeats;
+  List<String> _soldSeats = [];
+  List<String> get soldSeats => _soldSeats;
 
   int basePrice = 0;
   String movieTitle = "";
+
+  StreamSubscription? _bookingSubscription;
 
   void initData({
     required int basePriceInput,
@@ -14,6 +20,8 @@ class SeatControllerSalam with ChangeNotifier {
   }) {
     basePrice = basePriceInput;
     movieTitle = movieTitleInput;
+
+    _listenSoldSeats(movieTitle);
   }
 
   void toggleSeat(String seat) {
@@ -41,6 +49,22 @@ class SeatControllerSalam with ChangeNotifier {
     return total;
   }
 
+  void clearSelection() {
+    _selectedSeats.clear();
+    notifyListeners();
+  }
+
+  Future<void> loadSoldSeats(String movieTitle) async {
+    final snapshot = await FirebaseFirestore.instance.collection("bookings").where("movie_title", isEqualTo: movieTitle).get();
+    _soldSeats = [];
+
+    for (var doc in snapshot.docs) {
+      List seats = doc['seats'];
+      _soldSeats.addAll(seats.map((e) => e.toString()));
+    }
+
+    notifyListeners();
+  }
   Future<void> checkout(String userId) async {
     if (_selectedSeats.isEmpty || basePrice == 0 || movieTitle.isEmpty) {
       throw Exception("Data booking tidak lengkap");
@@ -53,22 +77,34 @@ class SeatControllerSalam with ChangeNotifier {
 
     final data = {
       'booking_id': bookingId,
-      'user_id': movieTitle,
+      'user_id': userId,
+      'movie_title': movieTitle,
       'seats': _selectedSeats,
       'total_price': calculateTotalPrice(),
       'booking_date': Timestamp.now(),
     };
 
     await docRef.set(data);
+    clearSelection();
 
-    // final total = calculateTotalPrice();
-    // await FirebaseFirestore.instance.collection("bookings").add({
-    //   "booking_id": 1,
-    //   "user_id": userId,
-    //   "movie_title": movieTitle,
-    //   "seats": _selectedSeats,
-    //   "total_price": total,
-    //   "booking_date": DateTime.now(),
-    // });
+  }
+
+  void _listenSoldSeats(String movieTitle) {
+    _bookingSubscription?.cancel();
+
+    _bookingSubscription = FirebaseFirestore.instance.collection("bookings").where("movie_title", isEqualTo: movieTitle).snapshots().listen((snapshot) {
+      _soldSeats = [];
+      for(var doc in snapshot.docs) {
+        List seats = doc['seats'];
+        _soldSeats.addAll(seats.map((e) => e.toString()));
+      }
+      notifyListeners();
+    });
+  }
+
+  @override
+  void dispose() {
+    _bookingSubscription?.cancel();
+    super.dispose();
   }
 }

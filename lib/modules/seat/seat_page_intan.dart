@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'seat_item_intan.dart';
 import '../../controllers/seat_controller.dart';
-import 'seat_item_intan.dart';
 import 'package:provider/provider.dart';
 
 class SeatPageIntan extends StatefulWidget {
@@ -32,6 +31,7 @@ class _SeatPageIntanState extends State<SeatPageIntan> {
       basePriceInput: widget.basePriceIntan,
       movieTitleInput: widget.movieTitleIntan,
     );
+    controller.loadSoldSeats(widget.movieTitleIntan);
   }
   String _formatPrice(int price) {
     return price.toString().replaceAllMapped(
@@ -45,7 +45,7 @@ class _SeatPageIntanState extends State<SeatPageIntan> {
     List<String> rowLettersIntan = ["A", "B", "C", "D", "E", "F"];
     final controller = context.watch<SeatControllerSalam>();
     final selectedSeatsIntan = controller.selectedSeats;
-    final soldSeatsIntan = [];
+    final soldSeatsIntan = controller.soldSeats;
 
     return Scaffold(
       backgroundColor: const Color(0xFF0F1419),
