@@ -125,7 +125,7 @@ class _LoginPageBioskopState extends State<LoginPageBioskop> {
                         const Text(
                           "CineBooking",
                           style: TextStyle(
-                            fontSize: 42,
+                            fontSize: 36,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                             letterSpacing: 1,
