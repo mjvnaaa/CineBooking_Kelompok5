@@ -49,11 +49,6 @@ class SeatControllerSalam with ChangeNotifier {
     return total;
   }
 
-  void clearSelection() {
-    _selectedSeats.clear();
-    notifyListeners();
-  }
-
   Future<void> loadSoldSeats(String movieTitle) async {
     final snapshot = await FirebaseFirestore.instance.collection("bookings").where("movie_title", isEqualTo: movieTitle).get();
     _soldSeats = [];
@@ -71,10 +66,8 @@ class SeatControllerSalam with ChangeNotifier {
     }
 
     final bookingCollection = FirebaseFirestore.instance.collection('bookings');
-
     final docRef = bookingCollection.doc();
     final bookingId = docRef.id;
-
     final data = {
       'booking_id': bookingId,
       'user_id': userId,
@@ -85,19 +78,21 @@ class SeatControllerSalam with ChangeNotifier {
     };
 
     await docRef.set(data);
-    clearSelection();
-
+    await FirebaseFirestore.instance.collection("bookings").where("movie_title", isEqualTo: movieTitle).snapshots().first;
+    notifyListeners();
+    _selectedSeats.clear();
   }
 
   void _listenSoldSeats(String movieTitle) {
     _bookingSubscription?.cancel();
 
     _bookingSubscription = FirebaseFirestore.instance.collection("bookings").where("movie_title", isEqualTo: movieTitle).snapshots().listen((snapshot) {
-      _soldSeats = [];
+      Set<String> updateSoldSeats = {};
       for(var doc in snapshot.docs) {
         List seats = doc['seats'];
-        _soldSeats.addAll(seats.map((e) => e.toString()));
+        updateSoldSeats.addAll(seats.map((e) => e.toString()));
       }
+      _soldSeats = updateSoldSeats.toList();
       notifyListeners();
     });
   }
