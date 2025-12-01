@@ -1,12 +1,13 @@
 // lib/models/home/home_page_adel.dart
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../movie_model_jevon.dart'; 
+
+import '../../../models/home/movie_model_adel.dart';
 import 'movie_card_adel.dart';
 import 'movie_detail_page_adel.dart';
 
-class HomePageAdel extends StatelessWidget {
-  const HomePageAdel({super.key});
+class HomePageJevon extends StatelessWidget {
+  const HomePageJevon({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +24,7 @@ class HomePageAdel extends StatelessWidget {
 
           
           final movies = snapshot.data!.docs.map((doc) {
-            return MovieModelJevon.fromMapJevon(doc.data(), doc.id);
+            return MovieModelAdel.fromMap(doc.data());
           }).toList();
 
           return GridView.builder(
@@ -36,13 +37,14 @@ class HomePageAdel extends StatelessWidget {
               childAspectRatio: 0.62,
             ),
             itemBuilder: (context, i) {
+              final movie = movies[i];
               return MovieCardAdel(
-                movie: movies[i], 
+                movie: movie,
                 onTap: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => MovieDetailPageAdel(movie: movies[i]),
+                      builder: (_) => MovieDetailPageAdel(movie: movie),
                     ),
                   );
                 },

@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
-import '../movie_model_jevon.dart';
+import '../../../models/home/movie_model_adel.dart';
+
 
 class MovieCardAdel extends StatelessWidget {
-  final MovieModelJevon movie;
+  final MovieModelAdel movie;
   final VoidCallback onTap;
 
-  const MovieCardAdel({super.key, required this.movie, required this.onTap});
+  const MovieCardAdel({
+    super.key,
+    required this.movie,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
