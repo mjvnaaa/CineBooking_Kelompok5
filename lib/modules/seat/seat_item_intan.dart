@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 
 class SeatItemIntan extends StatelessWidget {
-  final bool isSelectedIntan;
-  final bool isSoldIntan;
   final String seatNameIntan;
+  final bool isSoldIntan;
+  final bool isSelectedIntan;
   final VoidCallback onTapIntan;
 
   const SeatItemIntan({
     super.key,
-    required this.isSelectedIntan,
-    required this.isSoldIntan,
     required this.seatNameIntan,
+    required this.isSoldIntan,
+    required this.isSelectedIntan,
     required this.onTapIntan,
   });
 
