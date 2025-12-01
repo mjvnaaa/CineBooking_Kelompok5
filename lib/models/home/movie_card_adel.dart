@@ -1,62 +1,32 @@
 import 'package:flutter/material.dart';
-import '../../../models/home/movie_model_adel.dart';
-
+import '../movie_model_jevon.dart';
 
 class MovieCardAdel extends StatelessWidget {
-  final MovieModelAdel movie;
+  final MovieModelJevon movie;
   final VoidCallback onTap;
 
-  const MovieCardAdel({
-    super.key,
-    required this.movie,
-    required this.onTap,
-  });
+  const MovieCardAdel({super.key, required this.movie, required this.onTap});
 
   @override
-  Widget build(BuildContext context) {  
+  Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          
           Expanded(
             child: Hero(
-              tag: movie.movieId,
+              tag: movie.id, 
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(12),
                 child: Image.network(
-                  movie.posterUrl,
+                  movie.poster, 
                   fit: BoxFit.cover,
                   width: double.infinity,
+                  errorBuilder: (ctx, error, stackTrace) => const Icon(Icons.error),
                 ),
               ),
             ),
-          ),
-
-          const SizedBox(height: 8),
-
-          Text(
-            movie.title,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 14,
-            ),
-          ),
-
-          const SizedBox(height: 4),
-
-          Row(
-            children: [
-              const Icon(Icons.star, color: Colors.amber, size: 16),
-              const SizedBox(width: 4),
-              Text(
-                movie.rating.toString(),
-                style: const TextStyle(fontSize: 12),
-              ),
-            ],
           ),
         ],
       ),
