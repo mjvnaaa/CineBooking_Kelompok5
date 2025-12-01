@@ -1,3 +1,4 @@
+import 'package:cinebooking_kelompok5/controllers/seat_controller.dart';
 import 'package:flutter/material.dart';
 import 'seat_item_intan.dart';
 
@@ -26,6 +27,17 @@ class _SeatPageIntanState extends State<SeatPageIntan> {
       RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
       (Match m) => '${m[1]}.',
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      context.read<SeatControllerSalam>().initData(
+        basePriceInput: widget.basePriceIntan,
+        movieTitleInput: widget.movieTitleIntan,
+      );
+    });
   }
 
   @override
