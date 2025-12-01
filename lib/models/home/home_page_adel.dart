@@ -1,4 +1,3 @@
-// lib/models/home/home_page_adel.dart
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../movie_model_jevon.dart';
@@ -35,6 +34,43 @@ class HomePageAdel extends StatelessWidget {
           ],
         ),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout, color: Colors.white),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  backgroundColor: const Color(0xFF1A1F29),
+                  title: const Text(
+                    'Logout',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  content: const Text(
+                    'Are you sure you want to logout?',
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text('Cancel'),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text(
+                        'Logout',
+                        style: TextStyle(color: Colors.red[400]),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+            tooltip: 'Logout',
+          ),
+        ],
       ),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance.collection("movies").snapshots(),
