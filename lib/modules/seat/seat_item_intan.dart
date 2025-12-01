@@ -1,46 +1,65 @@
 import 'package:flutter/material.dart';
 
 class SeatItemIntan extends StatelessWidget {
-  final bool isSelectedIntan;
-  final bool isSoldIntan;
   final String seatNameIntan;
+  final bool isSoldIntan;
+  final bool isSelectedIntan;
   final VoidCallback onTapIntan;
 
   const SeatItemIntan({
     super.key,
-    required this.isSelectedIntan,
-    required this.isSoldIntan,
     required this.seatNameIntan,
+    required this.isSoldIntan,
+    required this.isSelectedIntan,
     required this.onTapIntan,
   });
 
   @override
   Widget build(BuildContext context) {
-    Color seatColorIntan;
+    Color backgroundColor;
+    Color borderColor;
+    Color textColor;
 
     if (isSoldIntan) {
-      seatColorIntan = Colors.red;      
+      backgroundColor = const Color(0xFF2D1B1B);
+      borderColor = Colors.red.shade700;
+      textColor = Colors.red.shade700;
     } else if (isSelectedIntan) {
-      seatColorIntan = Colors.blue;     
+      backgroundColor = const Color(0xFF1A2634);
+      borderColor = Colors.amber.shade600;
+      textColor = Colors.amber.shade600;
     } else {
-      seatColorIntan = Colors.grey;     
+      backgroundColor = const Color(0xFF1A1F29);
+      borderColor = Colors.grey.shade700;
+      textColor = Colors.grey.shade500;
     }
 
     return GestureDetector(
       onTap: isSoldIntan ? null : onTapIntan,
       child: Container(
-        alignment: Alignment.center,
         margin: const EdgeInsets.all(4),
         decoration: BoxDecoration(
-          color: seatColorIntan,
+          color: backgroundColor,
           borderRadius: BorderRadius.circular(6),
+          border: Border.all(
+            color: borderColor,
+            width: 1.5,
+          ),
+          boxShadow: isSelectedIntan
+              ? [
+                  BoxShadow(
+                    color: Colors.amber.shade600.withOpacity(0.3),
+                    blurRadius: 4,
+                    spreadRadius: 1,
+                  ),
+                ]
+              : [],
         ),
-        child: Text(
-          seatNameIntan,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 12,
-            fontWeight: FontWeight.bold,
+        child: Center(
+          child: Icon(
+            Icons.event_seat,
+            size: 20,
+            color: textColor,
           ),
         ),
       ),
