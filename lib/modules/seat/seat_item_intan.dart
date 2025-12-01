@@ -16,85 +16,51 @@ class SeatItemIntan extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color seatColorIntan;
-    Color borderColorIntan;
-    IconData? seatIconIntan;
+    Color backgroundColor;
+    Color borderColor;
+    Color textColor;
 
     if (isSoldIntan) {
-      seatColorIntan = const Color(0xFF2D1B1B);
-      borderColorIntan = Colors.red.shade700;
-      seatIconIntan = Icons.close;
+      backgroundColor = const Color(0xFF2D1B1B);
+      borderColor = Colors.red.shade700;
+      textColor = Colors.red.shade700;
     } else if (isSelectedIntan) {
-      seatColorIntan = const Color(0xFF1A2634);
-      borderColorIntan = Colors.amber.shade600;
-      seatIconIntan = Icons.check;
+      backgroundColor = const Color(0xFF1A2634);
+      borderColor = Colors.amber.shade600;
+      textColor = Colors.amber.shade600;
     } else {
-      seatColorIntan = const Color(0xFF1A1F29);
-      borderColorIntan = Colors.grey.shade700;
-      seatIconIntan = null;
+      backgroundColor = const Color(0xFF1A1F29);
+      borderColor = Colors.grey.shade700;
+      textColor = Colors.grey.shade500;
     }
 
     return GestureDetector(
       onTap: isSoldIntan ? null : onTapIntan,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        curve: Curves.easeInOut,
-        alignment: Alignment.center,
+      child: Container(
         margin: const EdgeInsets.all(4),
         decoration: BoxDecoration(
-          color: seatColorIntan,
-          borderRadius: BorderRadius.circular(8),
+          color: backgroundColor,
+          borderRadius: BorderRadius.circular(6),
           border: Border.all(
-            color: borderColorIntan,
-            width: isSelectedIntan ? 2.5 : 1.5,
+            color: borderColor,
+            width: 1.5,
           ),
           boxShadow: isSelectedIntan
               ? [
-                  BoxShadow(
-                    color: Colors.amber.shade600.withOpacity(0.4),
-                    blurRadius: 8,
-                    spreadRadius: 1,
-                  ),
-                ]
-              : isSoldIntan
-                  ? [
-                      BoxShadow(
-                        color: Colors.red.shade700.withOpacity(0.3),
-                        blurRadius: 4,
-                      ),
-                    ]
-                  : [],
-        ),
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            // Seat name
-            Text(
-              seatNameIntan,
-              style: TextStyle(
-                color: isSoldIntan
-                    ? Colors.red.shade400
-                    : isSelectedIntan
-                        ? Colors.amber.shade600
-                        : Colors.grey.shade500,
-                fontSize: 11,
-                fontWeight: FontWeight.bold,
-              ),
+            BoxShadow(
+              color: Colors.amber.shade600.withOpacity(0.3),
+              blurRadius: 4,
+              spreadRadius: 1,
             ),
-            // Icon overlay
-            if (seatIconIntan != null)
-              Positioned(
-                top: 2,
-                right: 2,
-                child: Icon(
-                  seatIconIntan,
-                  size: 12,
-                  color: isSoldIntan
-                      ? Colors.red.shade400
-                      : Colors.amber.shade600,
-                ),
-              ),
-          ],
+          ]
+              : [],
+        ),
+        child: Center(
+          child: Icon(
+            Icons.event_seat,
+            size: 20,
+            color: textColor,
+          ),
         ),
       ),
     );

@@ -42,14 +42,33 @@ class SeatControllerSalam with ChangeNotifier {
   }
 
   Future<void> checkout(String userId) async {
-    final total = calculateTotalPrice();
-    await FirebaseFirestore.instance.collection("bookings").add({
-      "booking_id": 1,
-      "user_id": userId,
-      "movie_title": movieTitle,
-      "seats": _selectedSeats,
-      "total_price": total,
-      "booking_date": DateTime.now(),
-    });
+    if (_selectedSeats.isEmpty || basePrice == 0 || movieTitle.isEmpty) {
+      throw Exception("Data booking tidak lengkap");
+    }
+
+    final bookingCollection = FirebaseFirestore.instance.collection('bookings');
+
+    final docRef = bookingCollection.doc();
+    final bookingId = docRef.id;
+
+    final data = {
+      'booking_id': bookingId,
+      'user_id': movieTitle,
+      'seats': _selectedSeats,
+      'total_price': calculateTotalPrice(),
+      'booking_date': Timestamp.now(),
+    };
+
+    await docRef.set(data);
+
+    // final total = calculateTotalPrice();
+    // await FirebaseFirestore.instance.collection("bookings").add({
+    //   "booking_id": 1,
+    //   "user_id": userId,
+    //   "movie_title": movieTitle,
+    //   "seats": _selectedSeats,
+    //   "total_price": total,
+    //   "booking_date": DateTime.now(),
+    // });
   }
 }
