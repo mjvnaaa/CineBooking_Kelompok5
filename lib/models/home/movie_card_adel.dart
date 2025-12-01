@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import '../../../models/home/movie_model_adel.dart';
-
+import '../movie_model_jevon.dart';
 
 class MovieCardAdel extends StatelessWidget {
-  final MovieModelAdel movie;
+  final MovieModelJevon movie;
   final VoidCallback onTap;
 
   const MovieCardAdel({
