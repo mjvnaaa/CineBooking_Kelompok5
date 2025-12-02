@@ -24,8 +24,20 @@ class HomePageAdel extends StatelessWidget {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(
-                builder: (_) => ProfilePageFariz(),
+              PageRouteBuilder(
+                pageBuilder: (context, animation, secondaryAnimation) => const ProfilePageFariz(),
+                transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                  return ScaleTransition(
+                    scale: Tween<double>(begin: 0.8, end: 1.0).animate(
+                      CurvedAnimation(
+                        parent: animation,
+                        curve: Curves.easeOutCubic,
+                      ),
+                    ),
+                    child: child,
+                  );
+                },
+                transitionDuration: const Duration(milliseconds: 300),
               ),
             );
           },

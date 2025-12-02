@@ -1,15 +1,15 @@
 class TicketFariz {
   final String movie;
-  final String studio;
-  final String seat;
+  final List<String> seats;
   final DateTime date;
   final String bookingId;
+  final int totalPrice;
 
   TicketFariz({
     required this.movie,
-    required this.studio,
-    required this.seat,
+    required this.seats,
     required this.date,
     required this.bookingId,
+    required this.totalPrice,
   });
 }

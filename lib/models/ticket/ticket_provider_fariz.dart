@@ -6,8 +6,9 @@ class TicketProviderFariz extends ChangeNotifier {
 
   List<TicketFariz> get tickets => List.unmodifiable(_tickets);
 
-  void addTicketFariz(TicketFariz ticket) {
-    _tickets.add(ticket);
+  void setTickets(List<TicketFariz> tickets) {
+    _tickets.clear();
+    _tickets.addAll(tickets);
     notifyListeners();
   }
 }
