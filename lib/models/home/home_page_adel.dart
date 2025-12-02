@@ -1,3 +1,5 @@
+import 'package:cinebooking_kelompok5/models/auth/login_page_fariz.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../movie_model_jevon.dart';
@@ -56,8 +58,13 @@ class HomePageAdel extends StatelessWidget {
                       child: const Text('Cancel'),
                     ),
                     TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
+                      onPressed: () async {
+                          await FirebaseAuth.instance.signOut();
+                          Navigator.pop(context);
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context) => LoginPageBioskop()),
+                        );
                       },
                       child: Text(
                         'Logout',
