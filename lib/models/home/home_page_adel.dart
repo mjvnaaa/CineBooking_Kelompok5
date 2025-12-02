@@ -1,5 +1,5 @@
 import 'package:cinebooking_kelompok5/models/auth/login_page_fariz.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cinebooking_kelompok5/models/profile/ticket_history_page_fariz.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../movie_model_jevon.dart';
@@ -19,6 +19,21 @@ class HomePageAdel extends StatelessWidget {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: const Color(0xFF1A1F29),
+        leading: IconButton(
+    icon: const Icon(Icons.person, color: Colors.white),
+    onPressed: () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => const ProfilePageFariz(
+            userName: "John Doe",
+            userEmail: "john@example.com",
+          ),
+        ),
+      );
+    },
+    tooltip: 'Profile',
+  ),
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
@@ -58,12 +73,13 @@ class HomePageAdel extends StatelessWidget {
                       child: const Text('Cancel'),
                     ),
                     TextButton(
-                      onPressed: () async {
-                          await FirebaseAuth.instance.signOut();
-                          Navigator.pop(context);
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (context) => LoginPageBioskop()),
+                      onPressed: () {
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => LoginPageBioskopFariz(),
+                          ),
+                          (route) => false,
                         );
                       },
                       child: Text(
@@ -84,22 +100,16 @@ class HomePageAdel extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
-              child: CircularProgressIndicator(
-                color: Colors.amber,
-              ),
+              child: CircularProgressIndicator(color: Colors.amber),
             );
           }
-          
+
           if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(
-                    Icons.movie_outlined,
-                    size: 80,
-                    color: Colors.grey[700],
-                  ),
+                  Icon(Icons.movie_outlined, size: 80, color: Colors.grey[700]),
                   const SizedBox(height: 16),
                   Text(
                     "No Movies Available",
@@ -137,17 +147,17 @@ class HomePageAdel extends StatelessWidget {
                     const SizedBox(height: 4),
                     Text(
                       "${movies.length} movies available",
-                      style: TextStyle(
-                        color: Colors.grey[500],
-                        fontSize: 14,
-                      ),
+                      style: TextStyle(color: Colors.grey[500], fontSize: 14),
                     ),
                   ],
                 ),
               ),
               Expanded(
                 child: GridView.builder(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
                   itemCount: movies.length,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: gridCount,
@@ -162,7 +172,8 @@ class HomePageAdel extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (_) => MovieDetailPageAdel(movie: movies[i]),
+                            builder: (_) =>
+                                MovieDetailPageAdel(movie: movies[i]),
                           ),
                         );
                       },

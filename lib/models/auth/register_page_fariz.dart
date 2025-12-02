@@ -2,83 +2,94 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class RegisterPageBioskop extends StatefulWidget {
-  const RegisterPageBioskop({super.key});
+class RegisterPageBioskopFariz extends StatefulWidget {
+  const RegisterPageBioskopFariz({super.key});
 
   @override
-  State<RegisterPageBioskop> createState() => _RegisterPageBioskopState();
+  State<RegisterPageBioskopFariz> createState() => _RegisterPageBioskopFarizState();
 }
 
-class _RegisterPageBioskopState extends State<RegisterPageBioskop> {
-  final nameController = TextEditingController();
-  final emailController = TextEditingController();
-  final passController = TextEditingController();
-  bool obscure = true;
-  bool isLoading = false;
+class _RegisterPageBioskopFarizState extends State<RegisterPageBioskopFariz> {
+  final nameControllerFariz = TextEditingController();
+  final emailControllerFariz = TextEditingController();
+  final passControllerFariz = TextEditingController();
+  bool obscureFariz = true;
+  bool isLoadingFariz = false;
+  bool nameErrorFariz = false;
+  bool emailErrorFariz = false;
+  bool passErrorFariz = false;
 
-  Future<void> registerUser() async {
-    String username = nameController.text.trim();
-    String email = emailController.text.trim();
-    String password = passController.text.trim();
 
-    if (username.isEmpty || email.isEmpty || password.isEmpty) {
-      showErrorSnackbar("Please fill all fields");
+  Future<void> registerUserFariz() async {
+    String usernameFariz = nameControllerFariz.text.trim();
+    String emailFariz = emailControllerFariz.text.trim();
+    String passwordFariz = passControllerFariz.text.trim();
+
+    if (usernameFariz.isEmpty || emailFariz.isEmpty || passwordFariz.isEmpty) {
+      showErrorSnackbarFariz("Please fill all fields");
       return;
     }
 
-    if (username.length < 3) {
-      showErrorSnackbar("Username must be at least 3 characters");
+    if (usernameFariz.length < 3) {
+      showErrorSnackbarFariz("Username must be at least 3 characters");
       return;
     }
 
-    if (password.length < 6) {
-      showErrorSnackbar("Password must be at least 6 characters");
+    if (passwordFariz.length < 6) {
+      showErrorSnackbarFariz("Password must be at least 6 characters");
       return;
     }
 
-    setState(() => isLoading = true);
+    setState(() => isLoadingFariz = true);
+    setState(() {
+    nameErrorFariz = usernameFariz.isEmpty || usernameFariz.length < 3;
+    emailErrorFariz = emailFariz.isEmpty;
+    passErrorFariz = passwordFariz.isEmpty || passwordFariz.length < 6;
+});
 
     try {
-      UserCredential userCredential = await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(email: email, password: password);
+      UserCredential userCredentialFariz = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: emailFariz, password: passwordFariz);
 
-      String uid = userCredential.user!.uid;
+      String uidFariz = userCredentialFariz.user!.uid;
 
-      await FirebaseFirestore.instance.collection('users').doc(uid).set({
-        'uid': uid,
-        'email': email,
-        'username': username,
+      await FirebaseFirestore.instance.collection('users').doc(uidFariz).set({
+        'uid': uidFariz,
+        'email': emailFariz,
+        'username': usernameFariz,
         'balance': 0,
         'createdAt': Timestamp.now(),
+        // tambahan inisial fariz sesuai permintaan
+        'inisial_fariz': true,
       });
 
       if (!mounted) return;
 
-      showSuccessSnackbar("Account created successfully!");
+      showSuccessSnackbarFariz("Account created successfully!");
 
       await Future.delayed(const Duration(seconds: 1));
       if (!mounted) return;
       Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
-      String message = "Registration failed";
+      String messageFariz = "Registration failed";
 
       if (e.code == 'email-already-in-use') {
-        message = "Email is already in use";
+        messageFariz = "Email is already in use";
       } else if (e.code == 'weak-password') {
-        message = "Password is too weak";
+        messageFariz = "Password is too weak";
       } else if (e.code == 'invalid-email') {
-        message = "Invalid email format";
+        messageFariz = "Invalid email format";
       }
 
-      showErrorSnackbar(message);
+      showErrorSnackbarFariz(messageFariz);
     } catch (e) {
-      showErrorSnackbar("An error occurred. Please try again");
+      showErrorSnackbarFariz("An error occurred. Please try again");
     } finally {
-      if (mounted) setState(() => isLoading = false);
+      if (mounted) setState(() => isLoadingFariz = false);
     }
   }
 
-  void showErrorSnackbar(String message) {
+  void showErrorSnackbarFariz(String messageFariz) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Row(
@@ -86,7 +97,7 @@ class _RegisterPageBioskopState extends State<RegisterPageBioskop> {
             const Icon(Icons.error_outline, color: Colors.white),
             const SizedBox(width: 12),
             Expanded(
-              child: Text(message, style: const TextStyle(fontSize: 14)),
+              child: Text(messageFariz, style: const TextStyle(fontSize: 14)),
             ),
           ],
         ),
@@ -98,7 +109,7 @@ class _RegisterPageBioskopState extends State<RegisterPageBioskop> {
     );
   }
 
-  void showSuccessSnackbar(String message) {
+  void showSuccessSnackbarFariz(String messageFariz) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Row(
@@ -106,7 +117,7 @@ class _RegisterPageBioskopState extends State<RegisterPageBioskop> {
             const Icon(Icons.check_circle_outline, color: Colors.white),
             const SizedBox(width: 12),
             Expanded(
-              child: Text(message, style: const TextStyle(fontSize: 14)),
+              child: Text(messageFariz, style: const TextStyle(fontSize: 14)),
             ),
           ],
         ),
@@ -120,9 +131,9 @@ class _RegisterPageBioskopState extends State<RegisterPageBioskop> {
 
   @override
   void dispose() {
-    nameController.dispose();
-    emailController.dispose();
-    passController.dispose();
+    nameControllerFariz.dispose();
+    emailControllerFariz.dispose();
+    passControllerFariz.dispose();
     super.dispose();
   }
 
@@ -170,7 +181,7 @@ class _RegisterPageBioskopState extends State<RegisterPageBioskop> {
                           ),
                           child: const Icon(Icons.arrow_back, color: Colors.white, size: 20),
                         ),
-                        onPressed: isLoading ? null : () => Navigator.pop(context),
+                        onPressed: isLoadingFariz ? null : () => Navigator.pop(context),
                       ),
                     ],
                   ),
@@ -239,8 +250,8 @@ class _RegisterPageBioskopState extends State<RegisterPageBioskop> {
                                 ),
                                 const SizedBox(height: 28),
                                 TextField(
-                                  controller: nameController,
-                                  enabled: !isLoading,
+                                  controller: nameControllerFariz,
+                                  enabled: !isLoadingFariz,
                                   textCapitalization: TextCapitalization.words,
                                   style: const TextStyle(color: Colors.white),
                                   decoration: InputDecoration(
@@ -265,8 +276,8 @@ class _RegisterPageBioskopState extends State<RegisterPageBioskop> {
                                 ),
                                 const SizedBox(height: 16),
                                 TextField(
-                                  controller: emailController,
-                                  enabled: !isLoading,
+                                  controller: emailControllerFariz,
+                                  enabled: !isLoadingFariz,
                                   keyboardType: TextInputType.emailAddress,
                                   style: const TextStyle(color: Colors.white),
                                   decoration: InputDecoration(
@@ -291,9 +302,9 @@ class _RegisterPageBioskopState extends State<RegisterPageBioskop> {
                                 ),
                                 const SizedBox(height: 16),
                                 TextField(
-                                  controller: passController,
-                                  obscureText: obscure,
-                                  enabled: !isLoading,
+                                  controller: passControllerFariz,
+                                  obscureText: obscureFariz,
+                                  enabled: !isLoadingFariz,
                                   style: const TextStyle(color: Colors.white),
                                   decoration: InputDecoration(
                                     filled: true,
@@ -302,9 +313,9 @@ class _RegisterPageBioskopState extends State<RegisterPageBioskop> {
                                     hintStyle: TextStyle(color: Colors.grey[600]),
                                     prefixIcon: Icon(Icons.lock_outline, color: Colors.amber[600]),
                                     suffixIcon: IconButton(
-                                      onPressed: () => setState(() => obscure = !obscure),
+                                      onPressed: () => setState(() => obscureFariz = !obscureFariz),
                                       icon: Icon(
-                                        obscure ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+                                        obscureFariz ? Icons.visibility_outlined : Icons.visibility_off_outlined,
                                         color: Colors.grey[500],
                                       ),
                                     ),
@@ -336,8 +347,8 @@ class _RegisterPageBioskopState extends State<RegisterPageBioskop> {
                                       elevation: 4,
                                       shadowColor: Colors.amber[600]!.withOpacity(0.4),
                                     ),
-                                    onPressed: isLoading ? null : registerUser,
-                                    child: isLoading
+                                    onPressed: isLoadingFariz ? null : registerUserFariz,
+                                    child: isLoadingFariz
                                         ? const SizedBox(
                                             height: 20,
                                             width: 20,
@@ -374,7 +385,7 @@ class _RegisterPageBioskopState extends State<RegisterPageBioskop> {
                                 style: TextStyle(color: Colors.grey[500]),
                               ),
                               TextButton(
-                                onPressed: isLoading ? null : () => Navigator.pop(context),
+                                onPressed: isLoadingFariz ? null : () => Navigator.pop(context),
                                 child: Text(
                                   "Login",
                                   style: TextStyle(
@@ -399,4 +410,3 @@ class _RegisterPageBioskopState extends State<RegisterPageBioskop> {
   }
 }
 
-// biar ke commit
