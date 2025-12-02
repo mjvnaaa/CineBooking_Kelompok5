@@ -1,4 +1,3 @@
-// lib/models/home/movie_detail_page_adel.dart
 import 'package:flutter/material.dart';
 import '../movie_model_jevon.dart';
 import '../../modules/seat/seat_page_intan.dart';
@@ -14,7 +13,6 @@ class MovieDetailPageAdel extends StatelessWidget {
       backgroundColor: const Color(0xFF0F1419),
       body: CustomScrollView(
         slivers: [
-          // App Bar with Poster
           SliverAppBar(
             expandedHeight: 450,
             pinned: true,
@@ -49,7 +47,6 @@ class MovieDetailPageAdel extends StatelessWidget {
                       ),
                     ),
                   ),
-                  // Gradient overlay
                   Container(
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
@@ -68,8 +65,6 @@ class MovieDetailPageAdel extends StatelessWidget {
               ),
             ),
           ),
-
-          // Movie Details
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.all(20),
@@ -113,8 +108,6 @@ class MovieDetailPageAdel extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 12),
-                      
-                      // Price
                       Expanded(
                         child: _buildInfoCard(
                           icon: Icons.attach_money,

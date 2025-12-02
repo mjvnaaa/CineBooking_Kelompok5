@@ -1,4 +1,3 @@
-// lib/models/home/movie_card_adel.dart
 import 'package:flutter/material.dart';
 import '../movie_model_jevon.dart';
 
@@ -32,7 +31,6 @@ class MovieCardAdel extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Poster Image
             Expanded(
               flex: 7,
               child: Hero(
@@ -58,7 +56,6 @@ class MovieCardAdel extends StatelessWidget {
                           ),
                         ),
                       ),
-                      // Gradient overlay
                       Positioned(
                         bottom: 0,
                         left: 0,
@@ -77,7 +74,6 @@ class MovieCardAdel extends StatelessWidget {
                           ),
                         ),
                       ),
-                      // Rating badge
                       Positioned(
                         top: 8,
                         right: 8,
@@ -122,17 +118,14 @@ class MovieCardAdel extends StatelessWidget {
                 ),
               ),
             ),
-            
-            // Movie Info
             Expanded(
-              flex: 3,
+              flex: 4,
               child: Padding(
                 padding: const EdgeInsets.all(12),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    // Title
                     Text(
                       movie.title,
                       maxLines: 2,
@@ -144,12 +137,9 @@ class MovieCardAdel extends StatelessWidget {
                         height: 1.2,
                       ),
                     ),
-                    
-                    // Price and Duration
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        // Price
                         Text(
                           "Rp ${movie.basePrice.toString().replaceAllMapped(
                             RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
@@ -161,8 +151,6 @@ class MovieCardAdel extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        
-                        // Duration
                         Row(
                           children: [
                             Icon(
