@@ -125,7 +125,7 @@ class _LoginPageBioskopState extends State<LoginPageBioskop> {
                         const Text(
                           "CineBooking",
                           style: TextStyle(
-                            fontSize: 36,
+                            fontSize: 42,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                             letterSpacing: 1,
@@ -232,6 +232,20 @@ class _LoginPageBioskopState extends State<LoginPageBioskop> {
                             ),
                           ),
                           const SizedBox(height: 12),
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: TextButton(
+                              onPressed: isLoading ? null : () {},
+                              child: Text(
+                                "Forgot password?",
+                                style: TextStyle(
+                                  color: Colors.amber[600],
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          ),
                           const SizedBox(height: 8),
                           SizedBox(
                             width: double.infinity,
@@ -314,5 +328,3 @@ class _LoginPageBioskopState extends State<LoginPageBioskop> {
     );
   }
 }
-
-// biar ke commit
