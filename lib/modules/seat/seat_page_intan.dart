@@ -1,8 +1,11 @@
+import 'package:cinebooking_kelompok5/models/home/home_page_adel.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'seat_item_intan.dart';
 import '../../controllers/seat_controller.dart';
 import 'package:provider/provider.dart';
+import '../../models/ticket/ticket_model_fariz.dart';
+import '../../models/ticket/ticket_provider_fariz.dart';
 
 class SeatPageIntan extends StatefulWidget {
   final String movieTitleIntan;
@@ -33,10 +36,11 @@ class _SeatPageIntanState extends State<SeatPageIntan> {
     );
     controller.loadSoldSeats(widget.movieTitleIntan);
   }
+
   String _formatPrice(int price) {
     return price.toString().replaceAllMapped(
       RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-          (Match m) => '${m[1]}.',
+      (Match m) => '${m[1]}.',
     );
   }
 
@@ -76,10 +80,7 @@ class _SeatPageIntanState extends State<SeatPageIntan> {
             ),
             Text(
               widget.movieTitleIntan,
-              style: TextStyle(
-                color: Colors.grey.shade500,
-                fontSize: 12,
-              ),
+              style: TextStyle(color: Colors.grey.shade500, fontSize: 12),
             ),
           ],
         ),
@@ -129,19 +130,22 @@ class _SeatPageIntanState extends State<SeatPageIntan> {
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: 6 * 8,
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 8,
-                      childAspectRatio: 1,
-                    ),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 8,
+                          childAspectRatio: 1,
+                        ),
                     itemBuilder: (context, index) {
                       int rowIndexIntan = index ~/ 8;
                       int colIndexIntan = (index % 8) + 1;
 
-                      String seatNameIntan = "${rowLettersIntan[rowIndexIntan]}$colIndexIntan";
+                      String seatNameIntan =
+                          "${rowLettersIntan[rowIndexIntan]}$colIndexIntan";
 
                       bool soldIntan = soldSeatsIntan.contains(seatNameIntan);
-                      bool selectedIntan =
-                      selectedSeatsIntan.contains(seatNameIntan);
+                      bool selectedIntan = selectedSeatsIntan.contains(
+                        seatNameIntan,
+                      );
 
                       return SeatItemIntan(
                         seatNameIntan: seatNameIntan,
@@ -163,10 +167,7 @@ class _SeatPageIntanState extends State<SeatPageIntan> {
                     decoration: BoxDecoration(
                       color: const Color(0xFF1A1F29),
                       borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: Colors.grey.shade800,
-                        width: 1,
-                      ),
+                      border: Border.all(color: Colors.grey.shade800, width: 1),
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -269,70 +270,126 @@ class _SeatPageIntanState extends State<SeatPageIntan> {
                     ),
 
                     ElevatedButton(
-                      onPressed: selectedSeatsIntan.isEmpty ? null : () {
+                      onPressed: selectedSeatsIntan.isEmpty
+                          ? null
+                          : () {
+                            final rootContext = context;
+                              showDialog(
+                                context: rootContext,
+                                builder: (context) => AlertDialog(
+                                  backgroundColor: const Color(0xFF1A1F29),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                  title: const Text(
+                                    "Booking Confirmation",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  content: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Movie: ${widget.movieTitleIntan}",
+                                        style: const TextStyle(
+                                          color: Colors.white70,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Text(
+                                        "Seats: ${selectedSeatsIntan.join(', ')}",
+                                        style: const TextStyle(
+                                          color: Colors.white70,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Text(
+                                        "Total: Rp ${_formatPrice(controller.calculateTotalPrice())}",
+                                        style: TextStyle(
+                                          color: Colors.amber.shade600,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () => Navigator.pop(context),
+                                      child: const Text(
+                                        "Cancel",
+                                        style: TextStyle(color: Colors.grey),
+                                      ),
+                                    ),
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.amber.shade600,
+                                        foregroundColor: Colors.black,
+                                      ),
+                                      onPressed: () async {
+                                        Navigator.pop(context);
 
-                        showDialog(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                            backgroundColor: const Color(0xFF1A1F29),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            title: const Text(
-                              "Booking Confirmation",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                            content: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Movie: ${widget.movieTitleIntan}",
-                                  style: const TextStyle(
-                                    color: Colors.white70,
-                                  ),
+                                        final bookingId = "BK${DateTime.now().toIso8601String().replaceAll(RegExp(r'[^0-9]'), '')}";
+
+                                        final ticket = TicketFariz(
+                                          movie: widget.movieTitleIntan,
+                                          studio: "Studio 1",
+                                          seat: selectedSeatsIntan.join(', '),
+                                          date: DateTime.now(),
+                                          bookingId: bookingId, 
+                                        );
+                                        context.read<TicketProviderFariz>().addTicketFariz(ticket);
+                                        await controller.checkout(FirebaseAuth.instance.currentUser!.uid);
+
+                                        showDialog(
+                                          context: rootContext,
+                                          barrierDismissible: false,
+                                          builder: (context) => AlertDialog(
+
+                                            backgroundColor: const Color(0xFF1A1F29),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(16),
+                                            ),
+                                            title: Row(
+                                              children: const[
+                                                Icon(Icons.check_circle, color: Colors.amber, size: 28),
+                                                SizedBox(width: 8),
+                                                Text(
+                                                  "Pesanan Berhasil",
+                                                  style: TextStyle(color: Colors.white),
+                                                ),
+                                              ],
+                                            ),
+                                            content: Text(
+                                              "Booking untuk ${widget.movieTitleIntan} (${selectedSeatsIntan.join(', ')}) berhasil!",
+                                              style: const TextStyle(color: Colors.white70),
+                                            ),
+                                            actions: [
+                                               ElevatedButton(
+                                                style: ElevatedButton.styleFrom(
+                                                  backgroundColor: Colors.amber.shade600,
+                                                  foregroundColor: Colors.black,
+                                                ),
+                                                onPressed: () {
+                                                  Navigator.of(rootContext).pop();
+                                                  Navigator.of(rootContext).pushAndRemoveUntil(
+                                                    MaterialPageRoute (builder: (_) => const HomePageAdel()),
+                                                    (route) => false,
+                                                  );
+                                                },
+                                                child: const Text("OK"),
+                                               ),
+                                            ],
+                                          ),
+                                        );
+                                      },
+                                      child: const Text("Confirm"),
+                                    ),
+                                  ],
                                 ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  "Seats: ${selectedSeatsIntan.join(', ')}",
-                                  style: const TextStyle(
-                                    color: Colors.white70,
-                                  ),
-                                ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  "Total: Rp ${_formatPrice(controller.calculateTotalPrice())}",
-                                  style: TextStyle(
-                                    color: Colors.amber.shade600,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            actions: [
-                              TextButton(
-                                onPressed: () => Navigator.pop(context),
-                                child: const Text(
-                                  "Cancel",
-                                  style: TextStyle(color: Colors.grey),
-                                ),
-                              ),
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.amber.shade600,
-                                  foregroundColor: Colors.black,
-                                ),
-                                onPressed: () async {
-                                  Navigator.pop(context);
-                                  await controller.checkout(FirebaseAuth.instance.currentUser!.uid);
-                                },
-                                child: const Text("Confirm"),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
+                              );
+                            },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: selectedSeatsIntan.isEmpty
                             ? Colors.grey.shade800
@@ -388,19 +445,12 @@ class _SeatPageIntanState extends State<SeatPageIntan> {
             borderRadius: BorderRadius.circular(6),
             border: Border.all(color: borderColor, width: 1.5),
           ),
-          child: Icon(
-            Icons.event_seat,
-            size: 14,
-            color: iconColor,
-          ),
+          child: Icon(Icons.event_seat, size: 14, color: iconColor),
         ),
         const SizedBox(width: 6),
         Text(
           label,
-          style: TextStyle(
-            color: Colors.grey.shade400,
-            fontSize: 12,
-          ),
+          style: TextStyle(color: Colors.grey.shade400, fontSize: 12),
         ),
       ],
     );

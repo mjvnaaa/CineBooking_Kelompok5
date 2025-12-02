@@ -1,5 +1,8 @@
+import 'package:cinebooking_kelompok5/models/ticket/ticket_provider_fariz.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import '../home/home_page_adel.dart'; // pastikan import HomePageAdel benar
 
 class ProfilePageFariz extends StatelessWidget {
   final String userName;
@@ -11,34 +14,27 @@ class ProfilePageFariz extends StatelessWidget {
     required this.userEmail,
   });
 
-  final List<Map<String, String>> tickets = const [
-    {
-      'movie': 'Avatar: The Way of Water',
-      'studio': 'Studio 1',
-      'seat': 'A5',
-      'date': '2025-12-03 19:30',
-      'bookingId': 'BK202512030001'
-    },
-    {
-      'movie': 'Spider-Man: No Way Home',
-      'studio': 'Studio 3',
-      'seat': 'C12',
-      'date': '2025-12-01 21:00',
-      'bookingId': 'BK202512010024'
-    },
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final tickets = context.watch<TicketProviderFariz>().tickets;
+
     return Scaffold(
       backgroundColor: const Color(0xFF0F1419),
       appBar: AppBar(
         backgroundColor: const Color(0xFF1A1F29),
         elevation: 0,
-        title: const Text(
-          "Profile",
-          style: TextStyle(color: Colors.white),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const HomePageAdel(),
+              ),
+            );
+          },
         ),
+        title: const Text("Profile", style: TextStyle(color: Colors.white)),
         centerTitle: true,
       ),
       body: Padding(
@@ -51,7 +47,11 @@ class ProfilePageFariz extends StatelessWidget {
                 CircleAvatar(
                   radius: 30,
                   backgroundColor: Colors.amber.shade600,
-                  child: const Icon(Icons.person, color: Colors.black, size: 30),
+                  child: const Icon(
+                    Icons.person,
+                    color: Colors.black,
+                    size: 30,
+                  ),
                 ),
                 const SizedBox(width: 16),
                 Column(
@@ -59,32 +59,44 @@ class ProfilePageFariz extends StatelessWidget {
                   children: [
                     Text(
                       userName,
-                      style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     Text(
                       userEmail,
-                      style: TextStyle(color: Colors.grey.shade400, fontSize: 14),
+                      style: TextStyle(
+                        color: Colors.grey.shade400,
+                        fontSize: 14,
+                      ),
                     ),
                   ],
-                )
+                ),
               ],
             ),
             const SizedBox(height: 24),
 
-            // Ticket history
             const Align(
               alignment: Alignment.centerLeft,
               child: Text(
                 "Ticket History",
-                style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
             const SizedBox(height: 12),
+
             Expanded(
               child: ListView.builder(
-                itemCount: tickets.length,
+                itemCount: tickets.length, 
                 itemBuilder: (context, index) {
-                  final ticket = tickets[index];
+                  final ticket = tickets[index]; 
+
                   return Container(
                     margin: const EdgeInsets.only(bottom: 16),
                     padding: const EdgeInsets.all(16),
@@ -103,7 +115,7 @@ class ProfilePageFariz extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          ticket['movie'] ?? '',
+                          ticket.movie,
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 18,
@@ -112,18 +124,24 @@ class ProfilePageFariz extends StatelessWidget {
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          'Studio: ${ticket['studio']} | Seat: ${ticket['seat']}',
-                          style: TextStyle(color: Colors.grey.shade500, fontSize: 14),
+                          'Studio: ${ticket.studio} | Seat: ${ticket.seat}',
+                          style: TextStyle(
+                            color: Colors.grey.shade500,
+                            fontSize: 14,
+                          ),
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          'Date: ${ticket['date']}',
-                          style: TextStyle(color: Colors.grey.shade500, fontSize: 14),
+                          'Date: ${ticket.date}',
+                          style: TextStyle(
+                            color: Colors.grey.shade500,
+                            fontSize: 14,
+                          ),
                         ),
                         const SizedBox(height: 12),
                         Center(
                           child: QrImageView(
-                            data: ticket['bookingId'] ?? '',
+                            data: ticket.bookingId,
                             version: QrVersions.auto,
                             size: 120,
                             backgroundColor: Colors.white,
@@ -132,8 +150,11 @@ class ProfilePageFariz extends StatelessWidget {
                         const SizedBox(height: 8),
                         Center(
                           child: Text(
-                            'Booking ID: ${ticket['bookingId']}',
-                            style: TextStyle(color: Colors.grey.shade500, fontSize: 12),
+                            'Booking ID: ${ticket.bookingId}',
+                            style: TextStyle(
+                              color: Colors.grey.shade500,
+                              fontSize: 12,
+                            ),
                           ),
                         ),
                       ],

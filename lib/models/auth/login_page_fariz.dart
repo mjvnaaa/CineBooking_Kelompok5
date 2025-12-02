@@ -288,16 +288,6 @@ class _LoginPageBioskopStateFariz extends State<LoginPageBioskopFariz> {
                               const Text("Remember me", style: TextStyle(color: Colors.white)),
                             ],
                           ),
-                          Align(
-                            alignment: Alignment.centerRight,
-                            child: TextButton(
-                              onPressed: farizIsLoading ? null : () {},
-                              child: Text(
-                                "Forgot password?",
-                                style: TextStyle(color: Colors.amber[600], fontSize: 13, fontWeight: FontWeight.w500),
-                              ),
-                            ),
-                          ),
                           const SizedBox(height: 8),
                           SizedBox(
                             width: double.infinity,

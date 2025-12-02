@@ -1,4 +1,5 @@
 import 'package:cinebooking_kelompok5/controllers/seat_controller.dart';
+import 'package:cinebooking_kelompok5/models/ticket/ticket_provider_fariz.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -11,6 +12,7 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => TicketProviderFariz()),
         ChangeNotifierProvider(create: (_) => SeatControllerSalam()),
       ],
       child: const MyApp(),
