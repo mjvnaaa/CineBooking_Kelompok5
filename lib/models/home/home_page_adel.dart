@@ -20,20 +20,17 @@ class HomePageAdel extends StatelessWidget {
         elevation: 0,
         backgroundColor: const Color(0xFF1A1F29),
         leading: IconButton(
-    icon: const Icon(Icons.person, color: Colors.white),
-    onPressed: () {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (_) => const ProfilePageFariz(
-            userName: "John Doe",
-            userEmail: "john@example.com",
-          ),
+          icon: const Icon(Icons.person, color: Colors.white),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => ProfilePageFariz(),
+              ),
+            );
+          },
+        tooltip: 'Profile',
         ),
-      );
-    },
-    tooltip: 'Profile',
-  ),
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
