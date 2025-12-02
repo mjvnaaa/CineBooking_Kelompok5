@@ -28,7 +28,7 @@ class _SeatPageIntanState extends State<SeatPageIntan> {
       basePriceInput: widget.basePriceIntan,
       movieTitleInput: widget.movieTitleIntan,
     );
-    controller.loadSoldSeats(widget.movieTitleIntan);
+    // controller.loadSoldSeats(widget.movieTitleIntan);
   }
   String _formatPrice(int price) {
     return price.toString().replaceAllMapped(
@@ -139,6 +139,7 @@ class _SeatPageIntanState extends State<SeatPageIntan> {
                       bool selectedIntan =
                       selectedSeatsIntan.contains(seatNameIntan);
                       return SeatItemIntan(
+                        key: ValueKey(seatNameIntan),
                         seatNameIntan: seatNameIntan,
                         isSoldIntan: soldIntan,
                         isSelectedIntan: selectedIntan,

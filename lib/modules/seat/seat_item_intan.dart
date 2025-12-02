@@ -65,36 +65,24 @@ class SeatItemIntan extends StatelessWidget {
                     ]
                   : [],
         ),
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            // Seat name
-            Text(
-              seatNameIntan,
-              style: TextStyle(
-                color: isSoldIntan
-                    ? Colors.red.shade400
-                    : isSelectedIntan
-                        ? Colors.amber.shade600
-                        : Colors.grey.shade500,
-                fontSize: 11,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            // Icon overlay
-            if (seatIconIntan != null)
-              Positioned(
-                top: 2,
-                right: 2,
-                child: Icon(
-                  seatIconIntan,
-                  size: 12,
-                  color: isSoldIntan
-                      ? Colors.red.shade400
-                      : Colors.amber.shade600,
+        child: Center(
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                seatNameIntan,
+                style: TextStyle(
+                  color: isSoldIntan ? Colors.red.shade400 : isSelectedIntan ? Colors.amber.shade600 : Colors.grey.shade500, fontSize: 11, fontWeight: FontWeight.bold,
                 ),
               ),
-          ],
+              if (seatIconIntan != null) ...[
+                const SizedBox(width: 2),
+                Icon(
+                  seatIconIntan, size: 12, color: isSoldIntan ? Colors.red.shade400 : Colors.amber.shade600,
+                ),
+              ],
+            ],
+          ),
         ),
       ),
     );

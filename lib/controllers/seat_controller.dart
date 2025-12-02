@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -60,6 +59,7 @@ class SeatControllerSalam with ChangeNotifier {
 
     notifyListeners();
   }
+
   Future<void> checkout(String userId) async {
     if (_selectedSeats.isEmpty || basePrice == 0 || movieTitle.isEmpty) {
       throw Exception("Data booking tidak lengkap");
@@ -79,8 +79,8 @@ class SeatControllerSalam with ChangeNotifier {
 
     await docRef.set(data);
     await FirebaseFirestore.instance.collection("bookings").where("movie_title", isEqualTo: movieTitle).snapshots().first;
-    notifyListeners();
     _selectedSeats.clear();
+    notifyListeners();
   }
 
   void _listenSoldSeats(String movieTitle) {
