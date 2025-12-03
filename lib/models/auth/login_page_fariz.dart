@@ -55,6 +55,7 @@ class _LoginPageBioskopStateFariz extends State<LoginPageBioskopFariz> {
   Future<void> farizHandleLogin() async {
     String email = farizEmailController.text.trim();
     String pass = farizPasswordController.text.trim();
+    
 
     setState(() {
       emailErrorFariz = email.isEmpty;
