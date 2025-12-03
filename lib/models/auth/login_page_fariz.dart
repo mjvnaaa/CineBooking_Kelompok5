@@ -54,6 +54,7 @@ class _LoginPageBioskopStateFariz extends State<LoginPageBioskopFariz> {
   Future<void> farizHandleLogin() async {
     String email = farizEmailController.text.trim();
     String pass = farizPasswordController.text.trim();
+    final regexEmail = RegExp(r'^[a-zA-Z0-9._%+-]+@student\.univ\.ac\.id$');
 
     setState(() {
       emailErrorFariz = email.isEmpty;
@@ -64,6 +65,11 @@ class _LoginPageBioskopStateFariz extends State<LoginPageBioskopFariz> {
       farizShowErrorSnackbar("Please fill in all fields");
       return;
     }
+
+    if (!regexEmail.hasMatch(email)) {
+      farizShowErrorSnackbar("Email must use @student.univ.ac.id");
+      return;
+      }
 
     setState(() => farizIsLoading = true);
 
