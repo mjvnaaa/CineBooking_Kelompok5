@@ -26,6 +26,21 @@ class _LoginPageBioskopStateFariz extends State<LoginPageBioskopFariz> {
   void initState() {
     super.initState();
     farizLoadLoginData();
+    farizCheckLoginStatus();
+    farizLoadLoginData();
+  }
+
+  Future<void> farizCheckLoginStatus() async {
+    final prefs = await SharedPreferences.getInstance();
+    bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+
+    if (isLoggedIn) {
+      if (!mounted) return;
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const HomePageAdel()),
+      );
+    }
   }
 
   Future<void> farizLoadLoginData() async {
@@ -55,7 +70,8 @@ class _LoginPageBioskopStateFariz extends State<LoginPageBioskopFariz> {
   Future<void> farizHandleLogin() async {
     String email = farizEmailController.text.trim();
     String pass = farizPasswordController.text.trim();
-    
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isLoggedIn', true); // SIMPAN STATUS LOGIN
 
     setState(() {
       emailErrorFariz = email.isEmpty;
@@ -66,20 +82,26 @@ class _LoginPageBioskopStateFariz extends State<LoginPageBioskopFariz> {
       farizShowErrorSnackbar("Please fill in all fields");
       return;
     }
-    
+
     if (!regexEmail.hasMatch(email)) {
       farizShowErrorSnackbar("Email must use @student.univ.ac.id");
       return;
-      }
+    }
 
     setState(() => farizIsLoading = true);
 
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: pass);
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: pass,
+      );
       await farizSaveLoginData(email, pass);
 
       if (!mounted) return;
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const HomePageAdel()));
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const HomePageAdel()),
+      );
     } on FirebaseAuthException catch (e) {
       String message = "Login failed";
       if (e.code == 'user-not-found') message = "No user found for that email";
@@ -98,7 +120,9 @@ class _LoginPageBioskopStateFariz extends State<LoginPageBioskopFariz> {
           children: [
             const Icon(Icons.error_outline, color: Colors.white),
             const SizedBox(width: 12),
-            Expanded(child: Text(message, style: const TextStyle(fontSize: 14))),
+            Expanded(
+              child: Text(message, style: const TextStyle(fontSize: 14)),
+            ),
           ],
         ),
         backgroundColor: Colors.red.shade700,
@@ -153,7 +177,11 @@ class _LoginPageBioskopStateFariz extends State<LoginPageBioskopFariz> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.movie_filter, color: Colors.amber[600], size: 40),
+                        Icon(
+                          Icons.movie_filter,
+                          color: Colors.amber[600],
+                          size: 40,
+                        ),
                         const SizedBox(width: 12),
                         const Text(
                           "CineBooking",
@@ -191,10 +219,20 @@ class _LoginPageBioskopStateFariz extends State<LoginPageBioskopFariz> {
                         children: [
                           const Text(
                             "Welcome Back",
-                            style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                           const SizedBox(height: 8),
-                          Text("Sign in to continue", style: TextStyle(color: Colors.grey[500], fontSize: 14)),
+                          Text(
+                            "Sign in to continue",
+                            style: TextStyle(
+                              color: Colors.grey[500],
+                              fontSize: 14,
+                            ),
+                          ),
                           const SizedBox(height: 28),
                           TextField(
                             controller: farizEmailController,
@@ -206,19 +244,32 @@ class _LoginPageBioskopStateFariz extends State<LoginPageBioskopFariz> {
                               fillColor: const Color(0xFF0F1419),
                               hintText: "Email",
                               hintStyle: TextStyle(color: Colors.grey[600]),
-                              prefixIcon: Icon(Icons.email_outlined, color: Colors.amber[600]),
+                              prefixIcon: Icon(
+                                Icons.email_outlined,
+                                color: Colors.amber[600],
+                              ),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
-                                borderSide: BorderSide(color: emailErrorFariz ? Colors.red : Colors.grey[800]!),
+                                borderSide: BorderSide(
+                                  color: emailErrorFariz
+                                      ? Colors.red
+                                      : Colors.grey[800]!,
+                                ),
                               ),
                               enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
-                                borderSide: BorderSide(color: emailErrorFariz ? Colors.red : Colors.grey[800]!),
+                                borderSide: BorderSide(
+                                  color: emailErrorFariz
+                                      ? Colors.red
+                                      : Colors.grey[800]!,
+                                ),
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                                 borderSide: BorderSide(
-                                   color: emailErrorFariz ? Colors.red : (Colors.amber[600] ?? Colors.amber),
+                                  color: emailErrorFariz
+                                      ? Colors.red
+                                      : (Colors.amber[600] ?? Colors.amber),
                                   width: 2,
                                 ),
                               ),
@@ -229,7 +280,10 @@ class _LoginPageBioskopStateFariz extends State<LoginPageBioskopFariz> {
                                   padding: EdgeInsets.only(top: 6, left: 4),
                                   child: Text(
                                     "Email cannot be empty",
-                                    style: TextStyle(color: Colors.red, fontSize: 12),
+                                    style: TextStyle(
+                                      color: Colors.red,
+                                      fontSize: 12,
+                                    ),
                                   ),
                                 )
                               : const SizedBox(),
@@ -244,9 +298,15 @@ class _LoginPageBioskopStateFariz extends State<LoginPageBioskopFariz> {
                               fillColor: const Color(0xFF0F1419),
                               hintText: "Password",
                               hintStyle: TextStyle(color: Colors.grey[600]),
-                              prefixIcon: Icon(Icons.lock_outline, color: Colors.amber[600]),
+                              prefixIcon: Icon(
+                                Icons.lock_outline,
+                                color: Colors.amber[600],
+                              ),
                               suffixIcon: IconButton(
-                                onPressed: () => setState(() => farizObscurePassword = !farizObscurePassword),
+                                onPressed: () => setState(
+                                  () => farizObscurePassword =
+                                      !farizObscurePassword,
+                                ),
                                 icon: Icon(
                                   farizObscurePassword
                                       ? Icons.visibility_outlined
@@ -256,16 +316,26 @@ class _LoginPageBioskopStateFariz extends State<LoginPageBioskopFariz> {
                               ),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
-                                borderSide: BorderSide(color: passErrorFariz ? Colors.red : Colors.grey[800]!),
+                                borderSide: BorderSide(
+                                  color: passErrorFariz
+                                      ? Colors.red
+                                      : Colors.grey[800]!,
+                                ),
                               ),
                               enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
-                                borderSide: BorderSide(color: passErrorFariz ? Colors.red : Colors.grey[800]!),
+                                borderSide: BorderSide(
+                                  color: passErrorFariz
+                                      ? Colors.red
+                                      : Colors.grey[800]!,
+                                ),
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                                 borderSide: BorderSide(
-                                  color: passErrorFariz ? Colors.red : Colors.amber[600] ?? Colors.amber,
+                                  color: passErrorFariz
+                                      ? Colors.red
+                                      : Colors.amber[600] ?? Colors.amber,
                                   width: 2,
                                 ),
                               ),
@@ -276,7 +346,10 @@ class _LoginPageBioskopStateFariz extends State<LoginPageBioskopFariz> {
                                   padding: EdgeInsets.only(top: 6, left: 4),
                                   child: Text(
                                     "Password cannot be empty",
-                                    style: TextStyle(color: Colors.red, fontSize: 12),
+                                    style: TextStyle(
+                                      color: Colors.red,
+                                      fontSize: 12,
+                                    ),
                                   ),
                                 )
                               : const SizedBox(),
@@ -292,7 +365,10 @@ class _LoginPageBioskopStateFariz extends State<LoginPageBioskopFariz> {
                                 },
                                 activeColor: Colors.amber[600],
                               ),
-                              const Text("Remember me", style: TextStyle(color: Colors.white)),
+                              const Text(
+                                "Remember me",
+                                style: TextStyle(color: Colors.white),
+                              ),
                             ],
                           ),
                           const SizedBox(height: 8),
@@ -302,24 +378,42 @@ class _LoginPageBioskopStateFariz extends State<LoginPageBioskopFariz> {
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.amber[600],
                                 foregroundColor: Colors.black,
-                                padding: const EdgeInsets.symmetric(vertical: 16),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 16,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
                                 elevation: 4,
-                                shadowColor: Colors.amber[600]!.withOpacity(0.4),
+                                shadowColor: Colors.amber[600]!.withOpacity(
+                                  0.4,
+                                ),
                               ),
-                              onPressed: farizIsLoading ? null : farizHandleLogin,
+                              onPressed: farizIsLoading
+                                  ? null
+                                  : farizHandleLogin,
                               child: farizIsLoading
                                   ? const SizedBox(
                                       height: 20,
                                       width: 20,
-                                      child: CircularProgressIndicator(color: Colors.black, strokeWidth: 2.5),
+                                      child: CircularProgressIndicator(
+                                        color: Colors.black,
+                                        strokeWidth: 2.5,
+                                      ),
                                     )
                                   : Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: const [
                                         Icon(Icons.login, size: 20),
                                         SizedBox(width: 8),
-                                        Text("Login", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                                        Text(
+                                          "Login",
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
                                       ],
                                     ),
                             ),
@@ -331,17 +425,29 @@ class _LoginPageBioskopStateFariz extends State<LoginPageBioskopFariz> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text("Don't have an account?", style: TextStyle(color: Colors.grey[500])),
+                        Text(
+                          "Don't have an account?",
+                          style: TextStyle(color: Colors.grey[500]),
+                        ),
                         TextButton(
                           onPressed: farizIsLoading
                               ? null
                               : () {
                                   Navigator.push(
                                     context,
-                                    MaterialPageRoute(builder: (_) => const RegisterPageBioskopFariz()),
+                                    MaterialPageRoute(
+                                      builder: (_) =>
+                                          const RegisterPageBioskopFariz(),
+                                    ),
                                   );
                                 },
-                          child: Text("Register", style: TextStyle(color: Colors.amber[600], fontWeight: FontWeight.bold)),
+                          child: Text(
+                            "Register",
+                            style: TextStyle(
+                              color: Colors.amber[600],
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
                       ],
                     ),

@@ -5,9 +5,25 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../movie_model_jevon.dart';
 import 'movie_card_adel.dart';
 import 'movie_detail_page_adel.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class HomePageAdel extends StatelessWidget {
   const HomePageAdel({super.key});
+
+  Future<void> farizLogout(BuildContext context) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    await prefs.setBool('isLoggedIn', false);
+
+    await FirebaseAuth.instance.signOut();
+
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (_) => const LoginPageBioskopFariz()),
+      (route) => false,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,23 +41,25 @@ class HomePageAdel extends StatelessWidget {
             Navigator.push(
               context,
               PageRouteBuilder(
-                pageBuilder: (context, animation, secondaryAnimation) => const ProfilePageFariz(),
-                transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                  return ScaleTransition(
-                    scale: Tween<double>(begin: 0.8, end: 1.0).animate(
-                      CurvedAnimation(
-                        parent: animation,
-                        curve: Curves.easeOutCubic,
-                      ),
-                    ),
-                    child: child,
-                  );
-                },
+                pageBuilder: (context, animation, secondaryAnimation) =>
+                    const ProfilePageFariz(),
+                transitionsBuilder:
+                    (context, animation, secondaryAnimation, child) {
+                      return ScaleTransition(
+                        scale: Tween<double>(begin: 0.8, end: 1.0).animate(
+                          CurvedAnimation(
+                            parent: animation,
+                            curve: Curves.easeOutCubic,
+                          ),
+                        ),
+                        child: child,
+                      );
+                    },
                 transitionDuration: const Duration(milliseconds: 300),
               ),
             );
           },
-        tooltip: 'Profile',
+          tooltip: 'Profile',
         ),
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -82,15 +100,7 @@ class HomePageAdel extends StatelessWidget {
                       child: const Text('Cancel'),
                     ),
                     TextButton(
-                      onPressed: () {
-                        Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => LoginPageBioskopFariz(),
-                          ),
-                          (route) => false,
-                        );
-                      },
+                      onPressed: () => farizLogout(context),
                       child: Text(
                         'Logout',
                         style: TextStyle(color: Colors.red[400]),
