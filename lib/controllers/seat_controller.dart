@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -61,6 +62,15 @@ class SeatControllerSalam with ChangeNotifier {
   }
 
   Future<void> checkout(String userId) async {
+
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isEmpty || result[0].rawAddress.isEmpty) {
+        throw Exception("Tidak ada koneksi internet. Silahkan cek jaringan Anda");
+      }
+    } catch (_) {
+      throw Exception("Tidak ada koneksi internet. Silahkan cek jaringan Anda");
+    }
     if (_selectedSeats.isEmpty || basePrice == 0 || movieTitle.isEmpty) {
       throw Exception("Data booking tidak lengkap");
     }
