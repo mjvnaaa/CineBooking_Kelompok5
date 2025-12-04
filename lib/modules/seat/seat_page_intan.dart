@@ -314,10 +314,24 @@ class _SeatPageIntanState extends State<SeatPageIntan> {
                                       ),
                                       onPressed: () async {
                                         Navigator.pop(context);
-                                        await controller.checkout(
-                                          FirebaseAuth
-                                              .instance.currentUser!.uid,
-                                        );
+                                        final errorMessage = await controller.checkout(FirebaseAuth.instance.currentUser!.uid,);
+
+                                        if (errorMessage != null) {
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                            SnackBar(content: Text(errorMessage),
+                                            backgroundColor: Colors.red,
+                                            ),
+                                          );
+                                        } else {
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                            SnackBar(content: Text("Booking berhasil !"),
+                                            backgroundColor: Colors.green,)
+                                          );
+                                        }
+                                        // await controller.checkout(
+                                        //   FirebaseAuth
+                                        //       .instance.currentUser!.uid,
+                                        // );
                                       },
                                       child: const Text("Confirm"),
                                     ),

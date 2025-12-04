@@ -61,36 +61,43 @@ class SeatControllerSalam with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> checkout(String userId) async {
-
+  Future<String?> checkout(String userId) async {
     try {
       final result = await InternetAddress.lookup('google.com');
       if (result.isEmpty || result[0].rawAddress.isEmpty) {
-        throw Exception("Tidak ada koneksi internet. Silahkan cek jaringan Anda");
+        return "Tidak ada koneksi internet. Silahkan cek jaringan Anda";
       }
     } catch (_) {
-      throw Exception("Tidak ada koneksi internet. Silahkan cek jaringan Anda");
+      return "Tidak ada koneksi internet. Silahkan cek jaringan Anda";
     }
+
     if (_selectedSeats.isEmpty || basePrice == 0 || movieTitle.isEmpty) {
-      throw Exception("Data booking tidak lengkap");
+      return "Data booking tidak lengkap";
     }
 
-    final bookingCollection = FirebaseFirestore.instance.collection('bookings');
-    final docRef = bookingCollection.doc();
-    final bookingId = docRef.id;
-    final data = {
-      'booking_id': bookingId,
-      'user_id': userId,
-      'movie_title': movieTitle,
-      'seats': _selectedSeats,
-      'total_price': calculateTotalPrice(),
-      'booking_date': Timestamp.now(),
-    };
+    try {
+      final bookingCollection = FirebaseFirestore.instance.collection('bookings');
+      final docRef = bookingCollection.doc();
+      final bookingId = docRef.id;
+      final data = {
+        'booking_id': bookingId,
+        'user_id': userId,
+        'movie_title': movieTitle,
+        'seats': _selectedSeats,
+        'total_price': calculateTotalPrice(),
+        'booking_date': Timestamp.now(),
+      };
 
-    await docRef.set(data);
-    await FirebaseFirestore.instance.collection("bookings").where("movie_title", isEqualTo: movieTitle).snapshots().first;
-    _selectedSeats.clear();
-    notifyListeners();
+      await docRef.set(data);
+    
+    //await FirebaseFirestore.instance.collection("bookings").where("movie_title", isEqualTo: movieTitle).snapshots().first;
+      _selectedSeats.clear();
+      notifyListeners();
+      return null;
+    
+    } catch (e) {
+      return "Gagal melakukan booking, coba lagi nanti";
+    }
   }
 
   void _listenSoldSeats(String movieTitle) {
