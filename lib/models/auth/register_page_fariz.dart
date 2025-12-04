@@ -30,6 +30,11 @@ class _RegisterPageBioskopFarizState extends State<RegisterPageBioskopFariz> {
       return;
     }
 
+    if (!emailFariz.endsWith("@student.univ.ac.id")) {
+      showErrorSnackbarFariz("Email must use @student.univ.ac.id");
+      return;
+      }
+
     if (usernameFariz.length < 3) {
       showErrorSnackbarFariz("Username must be at least 3 characters");
       return;
@@ -43,7 +48,7 @@ class _RegisterPageBioskopFarizState extends State<RegisterPageBioskopFariz> {
     setState(() => isLoadingFariz = true);
     setState(() {
     nameErrorFariz = usernameFariz.isEmpty || usernameFariz.length < 3;
-    emailErrorFariz = emailFariz.isEmpty;
+    emailErrorFariz = emailFariz.isEmpty || !emailFariz.endsWith("@student.univ.ac.id");
     passErrorFariz = passwordFariz.isEmpty || passwordFariz.length < 6;
 });
 
@@ -292,11 +297,11 @@ class _RegisterPageBioskopFarizState extends State<RegisterPageBioskopFariz> {
                                     ),
                                     enabledBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(12),
-                                      borderSide: BorderSide(color: Colors.grey[800]!),
+                                      borderSide: BorderSide(color: emailErrorFariz ? Colors.red : Colors.grey[800]!,),
                                     ),
                                     focusedBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(12),
-                                      borderSide: BorderSide(color: Colors.amber[600]!, width: 2),
+                                      borderSide: BorderSide(color: emailErrorFariz ? Colors.red : Colors.amber[600]!, width: 2,),
                                     ),
                                   ),
                                 ),
