@@ -14,7 +14,7 @@ class LoginPageBioskopFariz extends StatefulWidget {
 class _LoginPageBioskopStateFariz extends State<LoginPageBioskopFariz> {
   final farizEmailController = TextEditingController();
   final farizPasswordController = TextEditingController();
-  final regexEmail = RegExp(r'^[a-zA-Z0-9._%+-]+@student\.univ\.ac\.id$');
+  final regexEmail = RegExp(r'^[a-zA-Z0-9._%+-]+@poliwangi\.ac\.id$');
 
   bool farizObscurePassword = true;
   bool farizIsLoading = false;
@@ -55,7 +55,6 @@ class _LoginPageBioskopStateFariz extends State<LoginPageBioskopFariz> {
   Future<void> farizHandleLogin() async {
     String email = farizEmailController.text.trim();
     String pass = farizPasswordController.text.trim();
-    
 
     setState(() {
       emailErrorFariz = email.isEmpty;
@@ -66,11 +65,11 @@ class _LoginPageBioskopStateFariz extends State<LoginPageBioskopFariz> {
       farizShowErrorSnackbar("Please fill in all fields");
       return;
     }
-    
+
     if (!regexEmail.hasMatch(email)) {
-      farizShowErrorSnackbar("Email must use @student.univ.ac.id");
+      farizShowErrorSnackbar("Email must use @poliwangi.ac.id");
       return;
-      }
+    }
 
     setState(() => farizIsLoading = true);
 

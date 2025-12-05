@@ -1,11 +1,11 @@
-class TicketFariz {
+class TicketJevon {
   final String movie;
   final List<String> seats;
   final DateTime date;
   final String bookingId;
   final int totalPrice;
 
-  TicketFariz({
+  TicketJevon({
     required this.movie,
     required this.seats,
     required this.date,

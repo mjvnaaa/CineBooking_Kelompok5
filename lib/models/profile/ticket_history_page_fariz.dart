@@ -5,7 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import '../home/home_page_adel.dart';
 //import '../../models/ticket/ticket_provider_fariz.dart';
-import '../../models/ticket/ticket_model_fariz.dart';
+import '../ticket/ticket_model_jevon.dart';
 
 class ProfilePageFariz extends StatelessWidget {
   const ProfilePageFariz({super.key});
@@ -115,7 +115,7 @@ class ProfilePageFariz extends StatelessWidget {
                       // Update provider
                       final tickets = ticketDocs.map((doc) {
                         final data = doc.data() as Map<String, dynamic>;
-                        return TicketFariz(
+                        return TicketJevon(
                           movie: data['movie_title'],
                           seats: List<String>.from(data['seats']),
                           date: (data['booking_date'] as Timestamp).toDate(),

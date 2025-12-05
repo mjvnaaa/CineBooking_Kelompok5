@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../models/booking_model_jevon.dart';
 
 class SeatControllerSalam with ChangeNotifier {
   final List<String> _selectedSeats = [];
@@ -19,7 +20,6 @@ class SeatControllerSalam with ChangeNotifier {
   }) {
     basePrice = basePriceInput;
     movieTitle = movieTitleInput;
-
     _listenSoldSeats(movieTitle);
   }
 
@@ -36,7 +36,7 @@ class SeatControllerSalam with ChangeNotifier {
     int total = basePrice * _selectedSeats.length;
 
     if (movieTitle.length > 10) {
-      total = total + (total * 0.05).toInt();
+      total = total + (2500 * _selectedSeats.length);
     }
 
     for (var seat in _selectedSeats) {
@@ -51,12 +51,10 @@ class SeatControllerSalam with ChangeNotifier {
   Future<void> loadSoldSeats(String movieTitle) async {
     final snapshot = await FirebaseFirestore.instance.collection("bookings").where("movie_title", isEqualTo: movieTitle).get();
     _soldSeats = [];
-
     for (var doc in snapshot.docs) {
       List seats = doc['seats'];
       _soldSeats.addAll(seats.map((e) => e.toString()));
     }
-
     notifyListeners();
   }
 
@@ -68,16 +66,17 @@ class SeatControllerSalam with ChangeNotifier {
     final bookingCollection = FirebaseFirestore.instance.collection('bookings');
     final docRef = bookingCollection.doc();
     final bookingId = docRef.id;
-    final data = {
-      'booking_id': bookingId,
-      'user_id': userId,
-      'movie_title': movieTitle,
-      'seats': _selectedSeats,
-      'total_price': calculateTotalPrice(),
-      'booking_date': Timestamp.now(),
-    };
 
-    await docRef.set(data);
+    final booking = BookingModelJevon(
+      booking_id: bookingId,
+      user_id: userId,
+      movie_title: movieTitle,
+      seats: _selectedSeats,
+      total_price: calculateTotalPrice(),
+      booking_date: Timestamp.now(),
+    );
+
+    await docRef.set(booking.toMapJevon());
     await FirebaseFirestore.instance.collection("bookings").where("movie_title", isEqualTo: movieTitle).snapshots().first;
     _selectedSeats.clear();
     notifyListeners();
@@ -85,7 +84,6 @@ class SeatControllerSalam with ChangeNotifier {
 
   void _listenSoldSeats(String movieTitle) {
     _bookingSubscription?.cancel();
-
     _bookingSubscription = FirebaseFirestore.instance.collection("bookings").where("movie_title", isEqualTo: movieTitle).snapshots().listen((snapshot) {
       Set<String> updateSoldSeats = {};
       for(var doc in snapshot.docs) {

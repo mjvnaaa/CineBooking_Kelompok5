@@ -19,6 +19,7 @@ class _RegisterPageBioskopFarizState extends State<RegisterPageBioskopFariz> {
   bool emailErrorFariz = false;
   bool passErrorFariz = false;
 
+  final regexEmailFariz = RegExp(r'^[a-zA-Z0-9._%+-]+@poliwangi\.ac\.id$');
 
   Future<void> registerUserFariz() async {
     String usernameFariz = nameControllerFariz.text.trim();
@@ -30,10 +31,10 @@ class _RegisterPageBioskopFarizState extends State<RegisterPageBioskopFariz> {
       return;
     }
 
-    if (!emailFariz.endsWith("@student.univ.ac.id")) {
-      showErrorSnackbarFariz("Email must use @student.univ.ac.id");
+    if (!regexEmailFariz.hasMatch(emailFariz)) {
+      showErrorSnackbarFariz("Email must use @poliwangi.ac.id");
       return;
-      }
+    }
 
     if (usernameFariz.length < 3) {
       showErrorSnackbarFariz("Username must be at least 3 characters");
@@ -47,10 +48,10 @@ class _RegisterPageBioskopFarizState extends State<RegisterPageBioskopFariz> {
 
     setState(() => isLoadingFariz = true);
     setState(() {
-    nameErrorFariz = usernameFariz.isEmpty || usernameFariz.length < 3;
-    emailErrorFariz = emailFariz.isEmpty || !emailFariz.endsWith("@student.univ.ac.id");
-    passErrorFariz = passwordFariz.isEmpty || passwordFariz.length < 6;
-});
+      nameErrorFariz = usernameFariz.isEmpty || usernameFariz.length < 3;
+      emailErrorFariz = emailFariz.isEmpty || !regexEmailFariz.hasMatch(emailFariz);
+      passErrorFariz = passwordFariz.isEmpty || passwordFariz.length < 6;
+    });
 
     try {
       UserCredential userCredentialFariz = await FirebaseAuth.instance
@@ -63,9 +64,7 @@ class _RegisterPageBioskopFarizState extends State<RegisterPageBioskopFariz> {
         'email': emailFariz,
         'username': usernameFariz,
         'balance': 0,
-        'createdAt': Timestamp.now(),
-        // tambahan inisial fariz sesuai permintaan
-        'inisial_fariz': true,
+        'created_at': Timestamp.now(),
       });
 
       if (!mounted) return;
@@ -297,11 +296,11 @@ class _RegisterPageBioskopFarizState extends State<RegisterPageBioskopFariz> {
                                     ),
                                     enabledBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(12),
-                                      borderSide: BorderSide(color: emailErrorFariz ? Colors.red : Colors.grey[800]!,),
+                                      borderSide: BorderSide(color: emailErrorFariz ? Colors.red : Colors.grey[800]!),
                                     ),
                                     focusedBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(12),
-                                      borderSide: BorderSide(color: emailErrorFariz ? Colors.red : Colors.amber[600]!, width: 2,),
+                                      borderSide: BorderSide(color: emailErrorFariz ? Colors.red : Colors.amber[600]!, width: 2),
                                     ),
                                   ),
                                 ),
