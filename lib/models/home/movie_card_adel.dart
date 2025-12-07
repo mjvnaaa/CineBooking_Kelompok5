@@ -43,7 +43,7 @@ class MovieCardAdel extends StatelessWidget {
                   child: Stack(
                     children: [
                       Image.network(
-                        movie.poster,
+                        movie.poster_url,
                         fit: BoxFit.cover,
                         width: double.infinity,
                         height: double.infinity,
@@ -141,7 +141,7 @@ class MovieCardAdel extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          "Rp ${movie.basePrice.toString().replaceAllMapped(
+                          "Rp ${movie.base_price.toString().replaceAllMapped(
                             RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
                             (Match m) => '${m[1]}.',
                           )}",
