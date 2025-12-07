@@ -39,6 +39,7 @@ class _SeatPageIntanState extends State<SeatPageIntan> {
   @override
   Widget build(BuildContext context) {
     List<String> rowLettersIntan = ["A", "B", "C", "D", "E", "F"];
+
     final controller = context.watch<SeatControllerSalam>();
     final selectedSeatsIntan = controller.selectedSeats;
     final soldSeatsIntan = controller.soldSeats;
@@ -80,6 +81,7 @@ class _SeatPageIntanState extends State<SeatPageIntan> {
           ],
         ),
       ),
+
       body: Column(
         children: [
           Container(
@@ -115,7 +117,9 @@ class _SeatPageIntanState extends State<SeatPageIntan> {
               ),
             ),
           ),
+
           const SizedBox(height: 16),
+
           Expanded(
             child: SingleChildScrollView(
               child: Column(
@@ -125,7 +129,7 @@ class _SeatPageIntanState extends State<SeatPageIntan> {
                     child: GridView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
-                      itemCount: 5 * 6,
+                      itemCount: 6 * 5,
                       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 6,
                         childAspectRatio: 0.9,
@@ -136,10 +140,13 @@ class _SeatPageIntanState extends State<SeatPageIntan> {
                         int rowIndexIntan = index ~/ 6;
                         int colIndexIntan = (index % 6) + 1;
 
-                        String seatNameIntan = "${rowLettersIntan[rowIndexIntan]}$colIndexIntan";
+                        String seatNameIntan =
+                            "${rowLettersIntan[rowIndexIntan]}$colIndexIntan";
 
                         bool soldIntan = soldSeatsIntan.contains(seatNameIntan);
-                        bool selectedIntan = selectedSeatsIntan.contains(seatNameIntan);
+                        bool selectedIntan =
+                            selectedSeatsIntan.contains(seatNameIntan);
+
                         return SeatItemIntan(
                           key: ValueKey(seatNameIntan),
                           seatNameIntan: seatNameIntan,
@@ -154,7 +161,9 @@ class _SeatPageIntanState extends State<SeatPageIntan> {
                       },
                     ),
                   ),
+
                   const SizedBox(height: 24),
+
                   Container(
                     margin: const EdgeInsets.symmetric(horizontal: 16),
                     padding: const EdgeInsets.all(16),
@@ -173,20 +182,24 @@ class _SeatPageIntanState extends State<SeatPageIntan> {
                           color: const Color(0xFF1A1F29),
                           borderColor: Colors.grey.shade700,
                           label: "Available",
+                          iconColor: Colors.grey.shade400,
                         ),
                         _buildLegendItem(
                           color: const Color(0xFF1A2634),
                           borderColor: Colors.amber.shade600,
                           label: "Selected",
+                          iconColor: Colors.amber.shade600,
                         ),
                         _buildLegendItem(
                           color: const Color(0xFF2D1B1B),
                           borderColor: Colors.red.shade700,
                           label: "Sold",
+                          iconColor: Colors.red.shade400,
                         ),
                       ],
                     ),
                   ),
+
                   const SizedBox(height: 100),
                 ],
               ),
@@ -194,6 +207,7 @@ class _SeatPageIntanState extends State<SeatPageIntan> {
           ),
         ],
       ),
+
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           color: const Color(0xFF1A1F29),
@@ -231,6 +245,7 @@ class _SeatPageIntanState extends State<SeatPageIntan> {
                   ),
                   const SizedBox(height: 12),
                 ],
+
                 Row(
                   children: [
                     Expanded(
@@ -256,6 +271,7 @@ class _SeatPageIntanState extends State<SeatPageIntan> {
                         ],
                       ),
                     ),
+
                     ElevatedButton(
                       onPressed: selectedSeatsIntan.isEmpty
                           ? null
@@ -277,12 +293,14 @@ class _SeatPageIntanState extends State<SeatPageIntan> {
                                     children: [
                                       Text(
                                         "Movie: ${widget.movieTitleIntan}",
-                                        style: const TextStyle(color: Colors.white70),
+                                        style:
+                                            const TextStyle(color: Colors.white70),
                                       ),
                                       const SizedBox(height: 8),
                                       Text(
                                         "Seats: ${selectedSeatsIntan.join(', ')}",
-                                        style: const TextStyle(color: Colors.white70),
+                                        style:
+                                            const TextStyle(color: Colors.white70),
                                       ),
                                       const SizedBox(height: 8),
                                       Text(
@@ -311,8 +329,7 @@ class _SeatPageIntanState extends State<SeatPageIntan> {
                                       onPressed: () async {
                                         Navigator.pop(context);
                                         await controller.checkout(
-                                          FirebaseAuth
-                                              .instance.currentUser!.uid,
+                                          FirebaseAuth.instance.currentUser!.uid,
                                         );
                                       },
                                       child: const Text("Confirm"),
@@ -335,9 +352,9 @@ class _SeatPageIntanState extends State<SeatPageIntan> {
                         ),
                         elevation: selectedSeatsIntan.isEmpty ? 0 : 4,
                       ),
-                      child: Row(
+                      child: const Row(
                         mainAxisSize: MainAxisSize.min,
-                        children: const [
+                        children: [
                           Icon(Icons.confirmation_number, size: 20),
                           SizedBox(width: 8),
                           Text(
@@ -364,17 +381,19 @@ class _SeatPageIntanState extends State<SeatPageIntan> {
     required Color color,
     required Color borderColor,
     required String label,
+    required Color iconColor,
   }) {
     return Row(
       children: [
         Container(
-          width: 24,
-          height: 24,
+          width: 28,
+          height: 28,
           decoration: BoxDecoration(
             color: color,
             borderRadius: BorderRadius.circular(6),
             border: Border.all(color: borderColor, width: 1.5),
           ),
+          child: Icon(Icons.chair, size: 16, color: iconColor),
         ),
         const SizedBox(width: 6),
         Text(
