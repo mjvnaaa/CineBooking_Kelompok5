@@ -35,7 +35,7 @@ class MovieDetailPageAdel extends StatelessWidget {
                   Hero(
                     tag: movie.id,
                     child: Image.network(
-                      movie.poster,
+                      movie.poster_url,
                       fit: BoxFit.cover,
                       errorBuilder: (ctx, error, stackTrace) => Container(
                         color: Colors.grey[800],
@@ -71,7 +71,6 @@ class MovieDetailPageAdel extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Title
                   Text(
                     movie.title,
                     style: const TextStyle(
@@ -81,13 +80,9 @@ class MovieDetailPageAdel extends StatelessWidget {
                       height: 1.2,
                     ),
                   ),
-                  
                   const SizedBox(height: 20),
-                  
-                  // Info Cards
                   Row(
                     children: [
-                      // Rating
                       Expanded(
                         child: _buildInfoCard(
                           icon: Icons.star,
@@ -97,8 +92,6 @@ class MovieDetailPageAdel extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 12),
-                      
-                      // Duration
                       Expanded(
                         child: _buildInfoCard(
                           icon: Icons.access_time,
@@ -113,13 +106,12 @@ class MovieDetailPageAdel extends StatelessWidget {
                           icon: Icons.attach_money,
                           iconColor: Colors.green[400]!,
                           label: "From",
-                          value: "Rp ${_formatPrice(movie.basePrice)}",
+                          value: "Rp ${_formatPrice(movie.base_price)}",
                           valueSize: 14,
                         ),
                       ),
                     ],
                   ),
-                  
                   const SizedBox(height: 100),
                 ],
               ),
@@ -127,8 +119,6 @@ class MovieDetailPageAdel extends StatelessWidget {
           ),
         ],
       ),
-      
-      // Book Button
       floatingActionButton: Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -139,7 +129,7 @@ class MovieDetailPageAdel extends StatelessWidget {
               MaterialPageRoute(
                 builder: (context) => SeatPageIntan(
                   movieTitleIntan: movie.title,
-                  basePriceIntan: movie.basePrice,
+                  basePriceIntan: movie.base_price,
                 ),
               ),
             );
