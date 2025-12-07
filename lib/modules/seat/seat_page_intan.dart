@@ -19,7 +19,6 @@ class SeatPageIntan extends StatefulWidget {
 }
 
 class _SeatPageIntanState extends State<SeatPageIntan> {
-
   @override
   void initState() {
     super.initState();
@@ -28,12 +27,12 @@ class _SeatPageIntanState extends State<SeatPageIntan> {
       basePriceInput: widget.basePriceIntan,
       movieTitleInput: widget.movieTitleIntan,
     );
-    // controller.loadSoldSeats(widget.movieTitleIntan);
   }
+
   String _formatPrice(int price) {
     return price.toString().replaceAllMapped(
       RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-          (Match m) => '${m[1]}.',
+      (Match m) => '${m[1]}.',
     );
   }
 
@@ -116,43 +115,48 @@ class _SeatPageIntanState extends State<SeatPageIntan> {
               ),
             ),
           ),
+          const SizedBox(height: 16),
           Expanded(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Column(
                 children: [
-                  GridView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: 6 * 8,
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 8,
-                      childAspectRatio: 1,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: GridView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: 5 * 6,
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 6,
+                        childAspectRatio: 0.9,
+                        mainAxisSpacing: 4,
+                        crossAxisSpacing: 4,
+                      ),
+                      itemBuilder: (context, index) {
+                        int rowIndexIntan = index ~/ 6;
+                        int colIndexIntan = (index % 6) + 1;
+
+                        String seatNameIntan = "${rowLettersIntan[rowIndexIntan]}$colIndexIntan";
+
+                        bool soldIntan = soldSeatsIntan.contains(seatNameIntan);
+                        bool selectedIntan = selectedSeatsIntan.contains(seatNameIntan);
+                        return SeatItemIntan(
+                          key: ValueKey(seatNameIntan),
+                          seatNameIntan: seatNameIntan,
+                          isSoldIntan: soldIntan,
+                          isSelectedIntan: selectedIntan,
+                          onTapIntan: () {
+                            if (!soldIntan) {
+                              controller.toggleSeat(seatNameIntan);
+                            }
+                          },
+                        );
+                      },
                     ),
-                    itemBuilder: (context, index) {
-                      int rowIndexIntan = index ~/ 8;
-                      int colIndexIntan = (index % 8) + 1;
-
-                      String seatNameIntan = "${rowLettersIntan[rowIndexIntan]}$colIndexIntan";
-
-                      bool soldIntan = soldSeatsIntan.contains(seatNameIntan);
-                      bool selectedIntan =
-                      selectedSeatsIntan.contains(seatNameIntan);
-                      return SeatItemIntan(
-                        key: ValueKey(seatNameIntan),
-                        seatNameIntan: seatNameIntan,
-                        isSoldIntan: soldIntan,
-                        isSelectedIntan: selectedIntan,
-                        onTapIntan: () {
-                          if (!soldIntan) {
-                            controller.toggleSeat(seatNameIntan);
-                          }
-                        },
-                      );
-                    },
                   ),
                   const SizedBox(height: 24),
                   Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 16),
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
                       color: const Color(0xFF1A1F29),
@@ -183,14 +187,13 @@ class _SeatPageIntanState extends State<SeatPageIntan> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 120),
+                  const SizedBox(height: 100),
                 ],
               ),
             ),
           ),
         ],
       ),
-
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           color: const Color(0xFF1A1F29),
@@ -228,7 +231,6 @@ class _SeatPageIntanState extends State<SeatPageIntan> {
                   ),
                   const SizedBox(height: 12),
                 ],
-
                 Row(
                   children: [
                     Expanded(
@@ -254,7 +256,6 @@ class _SeatPageIntanState extends State<SeatPageIntan> {
                         ],
                       ),
                     ),
-
                     ElevatedButton(
                       onPressed: selectedSeatsIntan.isEmpty
                           ? null
@@ -272,19 +273,16 @@ class _SeatPageIntanState extends State<SeatPageIntan> {
                                   ),
                                   content: Column(
                                     mainAxisSize: MainAxisSize.min,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         "Movie: ${widget.movieTitleIntan}",
-                                        style: const TextStyle(
-                                            color: Colors.white70),
+                                        style: const TextStyle(color: Colors.white70),
                                       ),
                                       const SizedBox(height: 8),
                                       Text(
                                         "Seats: ${selectedSeatsIntan.join(', ')}",
-                                        style: const TextStyle(
-                                            color: Colors.white70),
+                                        style: const TextStyle(color: Colors.white70),
                                       ),
                                       const SizedBox(height: 8),
                                       Text(
@@ -299,8 +297,7 @@ class _SeatPageIntanState extends State<SeatPageIntan> {
                                   ),
                                   actions: [
                                     TextButton(
-                                      onPressed: () =>
-                                          Navigator.pop(context),
+                                      onPressed: () => Navigator.pop(context),
                                       child: const Text(
                                         "Cancel",
                                         style: TextStyle(color: Colors.grey),
@@ -308,30 +305,15 @@ class _SeatPageIntanState extends State<SeatPageIntan> {
                                     ),
                                     ElevatedButton(
                                       style: ElevatedButton.styleFrom(
-                                        backgroundColor:
-                                            Colors.amber.shade600,
+                                        backgroundColor: Colors.amber.shade600,
                                         foregroundColor: Colors.black,
                                       ),
                                       onPressed: () async {
                                         Navigator.pop(context);
-                                        final errorMessage = await controller.checkout(FirebaseAuth.instance.currentUser!.uid,);
-
-                                        if (errorMessage != null) {
-                                          ScaffoldMessenger.of(context).showSnackBar(
-                                            SnackBar(content: Text(errorMessage),
-                                            backgroundColor: Colors.red,
-                                            ),
-                                          );
-                                        } else {
-                                          ScaffoldMessenger.of(context).showSnackBar(
-                                            SnackBar(content: Text("Booking berhasil !"),
-                                            backgroundColor: Colors.green,)
-                                          );
-                                        }
-                                        // await controller.checkout(
-                                        //   FirebaseAuth
-                                        //       .instance.currentUser!.uid,
-                                        // );
+                                        await controller.checkout(
+                                          FirebaseAuth
+                                              .instance.currentUser!.uid,
+                                        );
                                       },
                                       child: const Text("Confirm"),
                                     ),
