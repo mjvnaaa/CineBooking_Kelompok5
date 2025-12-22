@@ -7,3 +7,4 @@ linux/
 macos/
 windows/
 .flutter-plugins-dependencies
+templates/output.pdf
