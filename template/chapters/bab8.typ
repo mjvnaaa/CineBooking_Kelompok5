@@ -11,6 +11,35 @@ Pada pengujian Trap Kursi, pemilihan kursi A1 (ganjil) dan A2 (genap) menghasilk
 == Pengujian Crash Handling
 Pada pengujian Crash Handling, ketika koneksi internet dimatikan saat tombol “Bayar” ditekan, aplikasi tidak mengalami force close. Sistem menampilkan pesan kesalahan kepada pengguna melalui notifikasi, sehingga pengguna tetap berada di dalam aplikasi. Hal ini menunjukkan bahwa mekanisme error handling telah berjalan dengan baik dan aplikasi memiliki stabilitas yang memadai.
 
+== Tampilan Home
+#figure(
+  image("../images/1.jpeg", width: 50%),
+  caption: [
+    Tampilan Home
+  ],
+)
+== Tampilan Detail Film
+#figure(
+  image("../images/2.jpeg", width: 50%),
+  caption: [
+    Tampilan Detail
+  ],
+)
+== Tampilan Seat
+#figure(
+  image("../images/3.jpeg", width: 50%),
+  caption: [
+    Tampilan Seat
+  ],
+)
+== Tampilan Pembayaran
+#figure(
+  image("../images/4.jpeg", width: 50%),
+  caption: [
+    Tampilan Seat
+  ],
+)
+
 == Video Demo Kode
 #show link: underline
 https://drive.google.com/drive/folders/1QkQTW50Yjv8zw_441B2LT8Kr62dnattT?usp=sharing
