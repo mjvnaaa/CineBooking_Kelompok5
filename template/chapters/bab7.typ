@@ -96,29 +96,139 @@ if (!regexEmail.hasMatch(email)) {
 
 == Halaman Home (Adel)
 - Menggunakan `GridView.builder` dengan `SliverGridDelegate`
+```dart
+// lib/models/home/home_page_adel.dart
+Expanded(
+                child: GridView.builder(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
+                  itemCount: movies.length,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: gridCount,
+                    crossAxisSpacing: 16,
+                    mainAxisSpacing: 16,
+                    childAspectRatio: 0.65,
+                  ),
+                  itemBuilder: (context, i) {
+                    return MovieCardAdel(
+                      movie: movies[i],
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) =>
+                                MovieDetailPageAdel(movie: movies[i]),
+                          ),
+                        );
+                      },
+                    );
+```
 - Hero animation pada poster film
+```dart
+// lib/models/home/movie_card_adel.dart
+child: Hero(
+                tag: movie.id,
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(16),
+                    topRight: Radius.circular(16),
+                  ),
+                  child: Hero(
+                tag: movie.id,
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(16),
+                    topRight: Radius.circular(16),
+                  ),
+                  child: Stack(
+                    children: [
+                      Image.network(
+                        movie.poster_url,
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                        height: double.infinity,
+                        errorBuilder: (ctx, error, stackTrace) => Container(
+                          color: Colors.grey[800],
+                          child: const Icon(
+                            Icons.broken_image,
+                            color: Colors.grey,
+                            size: 50,
+                          ),
+                        ),
+                      ),
+```
 - Responsif untuk berbagai ukuran layar
 
 ```dart
 // File: models/home/home_page_adel.dart
-int gridCount = screenWidth > 600 ? 3 : 2;
+  Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    int gridCount = screenWidth > 600 ? 3 : 2;
 ```
 
 == Halaman Seat Selection (Intan)
 - Grid kursi 6x6 dengan visual state:
+```dart
+// CineBooking_Kelompok5/lib/modules/seat/seat_page_intan.dart
+child: GridView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: 6 * 5,
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 6,
+                        childAspectRatio: 0.9,
+                        mainAxisSpacing: 4,
+                        crossAxisSpacing: 4,
+                      ),
+```
+```dart
+// CineBooking_Kelompok5/lib/modules/seat/seat_page_intan.dart
+    String seatNameIntan =
+                            "${rowLettersIntan[rowIndexIntan]}$colIndexIntan";
+```
   - Abu-abu: Available
+  ```dart
+  // CineBooking_Kelompok5/lib/modules/seat/seat_page_intan.dart
+  else {
+      seatColorIntan = const Color(0xFF1A1F29);
+      borderColorIntan = Colors.grey.shade700;
+      seatIconIntan = null;
+    }
+  ```
   - Biru: Selected
+  ```dart
+  // CineBooking_Kelompok5/lib/modules/seat/seat_page_intan.dart
+  else if (isSelectedIntan) {
+      seatColorIntan = const Color(0xFF1A2634);
+      borderColorIntan = Colors.amber.shade600;
+      seatIconIntan = Icons.check;
+    } 
+  ```
   - Merah: Sold
+  ```dart
+// CineBooking_Kelompok5/lib/modules/seat/seat_page_intan.dart
+  if (isSoldIntan) {
+      seatColorIntan = const Color(0xFF2D1B1B);
+      borderColorIntan = Colors.red.shade700;
+      seatIconIntan = Icons.close;
+    }
+  ```
 - Interaksi toggle select/unselect
 
 ```dart
-// File: modules/seat/seat_item_intan.dart
-Color seatColorIntan;
-if (isSoldIntan) {
-  seatColorIntan = Color(0xFF2D1B1B); // Merah
-} else if (isSelectedIntan) {
-  seatColorIntan = Color(0xFF1A2634); // Biru
-} else {
-  seatColorIntan = Color(0xFF1A1F29); // Abu-abu
-}
+lib/modules/seat/seat_page_intan.dartColor seatColorIntan;
+onTapIntan: () {
+                if (!soldIntan) {
+                controller.toggleSeat(seatNameIntan);
+                }
+              },
+```
+Tap kursi available -> Selected
+Tap lagi -> Unselect
+Kursi sold -> tidak bisa dipilih
+```dart
+    return GestureDetector(
+      onTap: isSoldIntan ? null : onTapIntan,
 ```
