@@ -3,7 +3,7 @@
 == Deskripsi Aplikasi
 Aplikasi CineBooking adalah aplikasi pemesanan tiket bioskop real-time berbasis Flutter dengan Firebase. Aplikasi ini memungkinkan pengguna untuk melihat film yang tersedia, memilih kursi, dan melakukan booking dengan perhitungan harga dinamis.
 
-== Pembagian Tanggung Jawab Kelompok 5
+== Pembagian Tanggung Jawab Kelompok 3
 
 #set text(font: "Times New Roman", size: 11pt)
 
